@@ -70,23 +70,24 @@ Please report any bugs or feature requests to
 \end{document}
 %</driver>
 % \fi
-% \title{\texttt{langsci-avm}}
+% \title{\pkg{langsci-avm}}
 % \author{Felix Kopecky\thanks{\protect\url{mailto:felix.kopecky@langsci-press.org}. 
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.1.0-beta -- 9th March 2020}
+% \date{Version 0.1.0-beta -- 11th March 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
 % \section{Introduction}
 % \pkg{langsci-avm} is a \LaTeX3 package aimed at typesetting beautiful feature structures, also known as \emph{attribute-value matrices}, for use in linguistics. The package provides a minimal and easy to read syntax. It depends only on the \pkg{array} package and can be placed almost everywhere, in particular in footnotes or graphs and tree structures. The package is meant as an update to, and serves the same purpose as, Christopher Manning's \pkg{avm} package, but shares no code base with that package. When you come from \pkg{avm}, please see Section~\ref{sec:switching} for a quick conversion guide.
+%
+% To start using \pkg{langsci-avm}, place |\usepackage{langsci-avm}| in your preamble.
 % 
 % \subsection{Example}
 % \begin{verbatim}
 % \avm{
-% [ cat  &   S\\
-%   ctxt & [ max-qud \\
+% [ ctxt & [ max-qud \\
 %            sal-utt & \{ [  cat \\ 
 %                           cont <ind & i> 
 %                         ]
@@ -96,14 +97,13 @@ Please report any bugs or feature requests to
 % }
 % \end{verbatim}
 % {\centering\avm{
-%     [ cat & S\\
-%         ctxt & [max-qud \\
+%     [ ctxt & [max-qud \\
 %                 sal-utt & \{ [  cat\\ cont <ind & i> ]  \}\\
 %                 ]
 %     ]
 % }\medskip\\}
 % \subsection{Acknowledgements}
-% Thanks to Phelype Oleinik for help on recursion and expansion with \LaTeX3. Thanks to Ahmet Bilal Özdemir and Stefan Müller for their help in planning and testing this package.
+% Thanks to Phelype Oleinik for help on recursion and expansion with \LaTeX3. Thanks to Ahmet Bilal Özdemir and Stefan Müller for their contributions in planning and testing this package.
 % 
 % \section{User interface}
 % \subsection{Typing structures and settings}\label{sec:options}
@@ -299,7 +299,7 @@ Please report any bugs or feature requests to
 % \avm[attributes=\normalfont]{[v1\\v2\\v3]}$\varphi$
 % \end{minipage}
 % 
-% \subsection{Example environments: \texttt{gb4e} and \texttt{expex}}
+% \subsection{Combinations with \pkg{gb4e} and \pkg{expex}}
 % 
 % This package works fine with \pkg{gb4e} and its fork \pkg{langsci-gb4e}. To align the example number at the top of your structure, please use \cs{attop} from \pkg{gb4e}:\bigskip\\
 % \noindent\begin{minipage}[c]{.5\textwidth}
@@ -335,7 +335,7 @@ Please report any bugs or feature requests to
 % 
 % \noindent A future version of \pkg{langsci-avm} will include a more user-friendly approach. There is currently no known way of adjusting the alignment with \pkg{linguex}.
 % 
-% \subsection{\texttt{forest}}
+% \subsection{Combinations with \pkg{forest}}
 % This package also works fine with \pkg{forest}. As per the \pkg{forest} documentation, it is recommended to protect any \cs{avm}-statements with |{}| in nodes:\bigskip\\
 % \noindent\begin{minipage}[c]{.6\textwidth}
 % \begin{verbatim}
@@ -353,10 +353,10 @@ Please report any bugs or feature requests to
 % \end{forest}
 % \end{minipage}
 % 
-% \subsection{Switching from Christopher Manning's \texttt{avm} package}\label{sec:switching}
+% \subsection{Switching from Christopher Manning's \pkg{avm} package}\label{sec:switching}
 % Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, the ``active mode'' has disappeared, there is now a single way of sorting (see \cs{type}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). Please refer to Section~\ref{sec:caveats} for features known from \pkg{avm} that are not yet available in \pkg{langsci-avm}.
 % 
-% \subsection{Tweaking the \texttt{attribute} font with with \texttt{fontspec}}
+% \subsection{Tweaking the \texttt{attribute} font with with \pkg{fontspec}}
 % The attributes in your structure are usually type set in \textsc{small caps}. That means that your input should usually be lowercase, unless capitals along small capitals in that attribute's description make sense. Some fonts also provide ``old style'' figures (also known as ``text'' or ``medieval'' figures). Those can be enabled with \pkg{fontspec}'s |Numbers=OldStyle| feature. 
 % 
 % 
@@ -415,7 +415,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-03-09} {0.1.0-beta}
+  {2020-03-11} {0.1.0-beta}
   {AVMs and feature structures in LaTeX3}
 %    \end{macrocode}
 %    \begin{macro}{\avm}
