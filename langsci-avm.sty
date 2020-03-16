@@ -138,7 +138,7 @@
 \cs_new:Npn \__avm_controls_tag:n #1
   { \fboxsep.25ex\fbox{\normalfont\__avm_font_tag: #1} }
 \cs_new:Npn \__avm_controls_type:n #1
-  {\normalfont\__avm_font_type: #1}
+  { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1
   {
     \normalfont\__avm_font_type: #1\span
