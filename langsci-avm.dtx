@@ -255,8 +255,8 @@ Please report any bugs or feature requests to
 %   In the scope of \cs{avm}, \cs{+} comes out as ``$\oplus$''. ``+'' can be obtained normally.\textit{In the earlier Version 0.1.0-beta, \cmd{+} produced ``$\oplus$''.}
 % \end{function}
 % 
-% \begin{function}[added=2020-03-16]{\o}
-%   In the scope of \cs{avm}, \cs{o} comes out as ``$\bigcirc$'' to mark the shuffle relation.
+% \begin{function}[added=2020-03-17]{\shuffle}
+%   In the scope of \cs{avm}, \cs{shuffle} is a shortcut for ``$\bigcirc$'' to mark the shuffle relation.
 % \end{function}
 % 
 % \section{Applications}
@@ -695,7 +695,7 @@ Please report any bugs or feature requests to
     \str_case:nnF {#1}
       {
         { \+ }{ \__avm_replace_plus: }
-        { \o }{ \__avm_replace_circle: }
+        { \shuffle }{ \__avm_replace_circle: }
         { [  }{ \__avm_replace_lbrack: }
         { ]  }{ \__avm_replace_rbrack: }
         { (  }{ \__avm_replace_lparen: }
