@@ -252,7 +252,11 @@ Please report any bugs or feature requests to
 % \end{function}
 % 
 % \begin{function}[updated=2020-03-16]{\+}
-%   In the scope of \cs{avm}, \cs{+} comes out as ``$\oplus$''. ``+'' can be obtained normally.\textit{In the earlier Version 0.1.0-beta, \cmd{+} produced ``$\oplus$''.}
+%   In the scope of \cs{avm}, \cs{+} comes out as ``$\oplus$''. ``+'' can be obtained normally. \textit{In the earlier Version 0.1.0-beta, \cmd{+} produced ``$\oplus$''.}
+% \end{function}
+% 
+% \begin{function}[added=2020-03-17]{\-}
+%   In the scope of \cs{avm}, \cs{-} comes out as ``$\ominus$''. To use the ``optional hyphenation'' meaning of \cs{-}, please write |!\-!|.
 % \end{function}
 % 
 % \begin{function}[added=2020-03-17]{\shuffle}
@@ -546,6 +550,10 @@ Please report any bugs or feature requests to
   { 
     \__avm_parse_output:nw { \ensuremath { \oplus } } 
   }
+\cs_new:Nn \__avm_replace_minus:
+  { 
+    \__avm_parse_output:nw { \ensuremath { \ominus } } 
+  }
 \cs_new:Nn \__avm_replace_circle:
   { 
     \__avm_parse_output:nw { \ensuremath { \bigcirc } } 
@@ -695,6 +703,7 @@ Please report any bugs or feature requests to
     \str_case:nnF {#1}
       {
         { \+ }{ \__avm_replace_plus: }
+        { \- }{ \__avm_replace_minus: }
         { \shuffle }{ \__avm_replace_circle: }
         { [  }{ \__avm_replace_lbrack: }
         { ]  }{ \__avm_replace_rbrack: }
