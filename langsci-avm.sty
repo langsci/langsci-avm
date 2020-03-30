@@ -149,7 +149,7 @@
   { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1
   {
-    \normalfont\__avm_font_type: #1\span
+    \normalfont\__avm_font_type: #1\span\hspace*{-2\arraycolsep}
     \peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2

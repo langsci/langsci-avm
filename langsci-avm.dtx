@@ -208,7 +208,7 @@ Please report any bugs or feature requests to
 %   \end{minipage}
 % \end{function}
 % 
-% \begin{function}{\type,\type*} 
+% \begin{function}[updated=2020-03-30]{\type,\type*} 
 %   \begin{syntax}
 %     \cs{type}\meta{*} \marg{type}
 %   \end{syntax}
@@ -561,7 +561,7 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
 
-%    \begin{macro}{\tag,\type,\punk}
+%    \begin{macro}[updated=2020-03-30]{\tag,\type,\punk}
 %    \begin{macrocode}
 \cs_new:Npn \__avm_controls_tag:n #1 
   { \fboxsep.25ex\fbox{\normalfont\__avm_font_tag: #1} } 
@@ -569,7 +569,7 @@ Please report any bugs or feature requests to
   { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1 
   {
-    \normalfont\__avm_font_type: #1\span                                                
+    \normalfont\__avm_font_type: #1\span\hspace*{-2\arraycolsep}                                                
     \peek_meaning_ignore_spaces:NTF \\ {} {\\} 
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2 
