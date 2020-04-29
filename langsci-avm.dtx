@@ -187,10 +187,10 @@ Please report any bugs or feature requests to
 %   Escapes the |avm| mode so that all delimiters can be used as usual characters. If you need |!| as a regular character, see \cs{avmsetup} to change the |switch| option.
 % \end{function}
 % 
-% \begin{function}{\tag,\1,...,\9}
+% \begin{function}[updated=2020-04-29]{\tag,\0,\1,...,\9}
 %   \begin{syntax}
 %    \cs{tag} \marg{identifier}
-%    \cmd{\1, \2, \3, \4, \5, \6, \7, \8, \9}
+%    \cmd{\0, \1, \2, \3, \4, \5, \6, \7, \8, \9}
 %   \end{syntax}
 %   \cs{tag} puts its \marg{identifier} in a box, more precisely an \cs{fbox}. Within the box, the |tags| font is applied. \cs{1}, ..., \cs{9} are shortcuts to \cs{tag} and place the respective number in the box. For example, \cs{4} is equivalent to |\tag{4}|. The shortcuts do not take any arguments.
 %   
@@ -585,6 +585,9 @@ Please report any bugs or feature requests to
     \cs_if_exist:NTF \tag 
       {  \RenewDocumentCommand{\tag}{m}{ \__avm_controls_tag:n {##1} } }
       {  \NewDocumentCommand{\tag}{m}{   \__avm_controls_tag:n {##1} } }
+    \cs_if_exist:NTF \0
+      {  \RenewDocumentCommand{\0}{}{    \__avm_controls_tag:n {0} } }
+      {  \NewDocumentCommand{\0}{}{      \__avm_controls_tag:n {0} } }
     \cs_if_exist:NTF \1   
       {  \RenewDocumentCommand{\1}{}{    \__avm_controls_tag:n {1} } }
       {  \NewDocumentCommand{\1}{}{      \__avm_controls_tag:n {1} } }
