@@ -124,7 +124,7 @@ Please report any bugs or feature requests to
 %   \begin{description}[style=nextline]
 %   \item[|stretch =| \meta{factor} \hfill (initially |0.9|)] Define \cs{arraystretch}, i.e. the factor of line spacing. Increasing this may be useful if there is too little vertical space between delimiters in subsequent rows.
 %   
-%   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{arraycolsep}, i.e. horizontal space before and after any column. The first and second column will have |1\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
+%   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{tabcolsep}, i.e. horizontal space before and after any column. The first and second column will have |1\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
 %   
 %   \item[|delimfactor =| \meta{factor} \hfill (initially |1000|)] Sets \cs{delimiterfactor}. The calculation for the minimum height of a delimiter is $y \cdot f /1000$, where $y$ is the height of the content and $f$ the value of  \cmd{delimfactor}. The default |1000| ensure that the delimiters' height is at least that of the structure.
 %   
@@ -151,7 +151,7 @@ Please report any bugs or feature requests to
 %   \end{syntax}
 %   Within the scope of \cs{avm}, these delimiters create (sub-)structures that are enclosed by the respective delimiter.  Due to the special meaning that curly braces have in \LaTeX, they are the only ones that need to be run with an escape token (|\|). It is currently possible to mix delimiters, e.g. with |<|\meta{structure}|)|, but this may change in future versions.
 %   
-%   A \meta{structure} is basically the content of a stylised \cmd{array}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
+%   A \meta{structure} is basically the content of a stylised \cmd{tabular}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
 %   
 %   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have exactly one \cmd{&} in your \meta{structure}. In the current beta version, display issues may appear in some structures if none is given.\bigskip\\
 %   \noindent\begin{minipage}[c]{.5\linewidth}
@@ -456,7 +456,7 @@ Please report any bugs or feature requests to
   {
     stretch .code:n        = {\def\arraystretch{#1}},
     stretch .initial:n     = {0.9},
-    columnsep .dim_set:N   = \arraycolsep,
+    columnsep .dim_set:N   = \tabcolsep,
     columnsep .initial:n   = {.5ex},
     delimfactor .int_set:N = \delimiterfactor,
     delimfactor .initial:n = {1000},
@@ -476,10 +476,9 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
   
-%    \begin{variable}{\l__avm_math_bool, \l__avm_mode_bool, \l__avm_parens_tracker}
-% We need an auxiliary variable to store the current mode. The math mode boolean is already created, but it will have an effect only in a later version which will include a check whether \cs{avm} is called in math mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced.
+%    \begin{variable}{\l__avm_mode_bool, \l__avm_parens_tracker}
+% We need an auxiliary variable to store the current mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced.
 %    \begin{macrocode}
-\bool_new:N \l__avm_math_bool
 \bool_new:N \l__avm_mode_bool
 \seq_new:N \l__avm_parens_tracker
 %    \end{macrocode}
@@ -498,14 +497,10 @@ Please report any bugs or feature requests to
 %    \begin{macrocode}
 \cs_new:Nn \__avm_module_begin: 
   { 
-    \begin{array}{ 
-      >{\c_math_toggle_token\normalfont\__avm_font_attribute:}l
-      <\c_math_toggle_token
-      >{\c_math_toggle_token\normalfont\__avm_font_value:}l
-      <\c_math_toggle_token} 
+    \begin{tabular}{@{} >{\normalfont\__avm_font_attribute:}l >{\normalfont\__avm_font_value:}l @{}} 
   }
 \cs_new:Nn \__avm_module_end:
-  { \end{array} }
+  { \end{tabular} }
 \cs_new:Nn \__avm_replace_lbrace: 
   { 
     \__avm_parse_output:nw 
@@ -569,13 +564,13 @@ Please report any bugs or feature requests to
   { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1 
   {
-    \normalfont\__avm_font_type: #1\span\hspace*{-2\arraycolsep}                                                
+    \normalfont\__avm_font_type: #1\span\hspace*{-2\tabcolsep}                                                
     \peek_meaning_ignore_spaces:NTF \\ {} {\\} 
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2 
   {  
      \normalfont\c_group_begin_token\__avm_font_attribute:#1%
-     \c_group_end_token\hspace{2\arraycolsep}%
+     \c_group_end_token\hspace{2\tabcolsep}%
      \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
      \span\peek_meaning_ignore_spaces:NTF \\ {} {\\}                                               
   }

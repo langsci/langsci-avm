@@ -56,7 +56,7 @@
   {
     stretch .code:n        = {\def\arraystretch{#1}},
     stretch .initial:n     = {0.9},
-    columnsep .dim_set:N   = \arraycolsep,
+    columnsep .dim_set:N   = \tabcolsep,
     columnsep .initial:n   = {.5ex},
     delimfactor .int_set:N = \delimiterfactor,
     delimfactor .initial:n = {1000},
@@ -74,7 +74,6 @@
     switch .initial:n      = { ! }
   }
 
-\bool_new:N \l__avm_math_bool
 \bool_new:N \l__avm_mode_bool
 \seq_new:N \l__avm_parens_tracker
 
@@ -82,14 +81,10 @@
 
 \cs_new:Nn \__avm_module_begin:
   {
-    \begin{array}{
-      >{\c_math_toggle_token\normalfont\__avm_font_attribute:}l
-      <\c_math_toggle_token
-      >{\c_math_toggle_token\normalfont\__avm_font_value:}l
-      <\c_math_toggle_token}
+    \begin{tabular}{@{} >{\normalfont\__avm_font_attribute:}l >{\normalfont\__avm_font_value:}l @{}}
   }
 \cs_new:Nn \__avm_module_end:
-  { \end{array} }
+  { \end{tabular} }
 \cs_new:Nn \__avm_replace_lbrace:
   {
     \__avm_parse_output:nw
@@ -149,13 +144,13 @@
   { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1
   {
-    \normalfont\__avm_font_type: #1\span\hspace*{-2\arraycolsep}
+    \normalfont\__avm_font_type: #1\span\hspace*{-2\tabcolsep}
     \peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2
   {
      \normalfont\c_group_begin_token\__avm_font_attribute:#1%
-     \c_group_end_token\hspace{2\arraycolsep}%
+     \c_group_end_token\hspace{2\tabcolsep}%
      \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
      \span\peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
