@@ -491,16 +491,54 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
 
+%    \begin{variable}{\l__avm_in_first_column}
+% A boolean to check whether we are in the first column (value |true|) or in the second (value |false|).
+%    \begin{macrocode}
+\bool_new:N \l__avm_in_first_column
+%    \end{macrocode}
+%    \end{variable}
+
+%    \begin{macro}[int]{\__avm_init_first_column:, \__avm_init_second_column:}
+% These macros apply the settings for the columns in a (sub-)structure. They take care of font selection and report the currently active column back to the system. Knowing which column is active is important when closing the (sub-)structure. If the structure is closed without a second column present, we need to skip back |2\tabcolsep|.
+%    \begin{macrocode}
+\cs_new:Nn \__avm_init_first_column:
+  {
+    \bool_set_true:N \l__avm_in_first_column
+    \normalfont\__avm_font_attribute:
+  }
+
+\cs_new:Nn \__avm_init_second_column:
+  {
+    \bool_set_false:N \l__avm_in_first_column
+    \normalfont\__avm_font_value:
+  }
+%    \end{macrocode}
+%    \end{macro}
+
+%    \begin{macro}[int]{\__avm_kern_unused_columns:}
+% A helper macro to fill the horizontal space if a row is ended prematurely, i.e. if no \cmd{&} is present.
+%    \begin{macrocode}
+\cs_new:Nn \__avm_kern_unused_columns:
+  {
+    \bool_if:NTF \l__avm_in_first_column
+      { \span\hspace*{-2\tabcolsep} }
+      {  }
+  }
+%    \end{macrocode}    
+%    \end{macro}
 
 %    \begin{macro}[int]{\__avm_module_begin:,\__avm_module_end:,etc.}
 % The replacement instructions for \cs{__avm_parse:n}
 %    \begin{macrocode}
 \cs_new:Nn \__avm_module_begin: 
   { 
-    \begin{tabular}{@{} >{\normalfont\__avm_font_attribute:}l >{\normalfont\__avm_font_value:}l @{}} 
+    \begin{tabular}{@{} >{\__avm_init_first_column:}l >{\__avm_init_second_column:}l @{}} 
   }
 \cs_new:Nn \__avm_module_end:
-  { \end{tabular} }
+  { 
+    \__avm_kern_unused_columns:
+    \end{tabular} 
+  }
 \cs_new:Nn \__avm_replace_lbrace: 
   { 
     \__avm_parse_output:nw 
@@ -564,15 +602,17 @@ Please report any bugs or feature requests to
   { \c_group_begin_token\normalfont\__avm_font_type: #1\c_group_end_token }
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1 
   {
+    \bool_set_false:N \l__avm_in_first_column
     \normalfont\__avm_font_type: #1\span\hspace*{-2\tabcolsep}                                                
     \peek_meaning_ignore_spaces:NTF \\ {} {\\} 
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2 
   {  
-     \normalfont\c_group_begin_token\__avm_font_attribute:#1%
-     \c_group_end_token\hspace{2\tabcolsep}%
-     \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
-     \span\peek_meaning_ignore_spaces:NTF \\ {} {\\}                                               
+    \bool_set_false:N \l__avm_in_first_column
+    \normalfont\c_group_begin_token\__avm_font_attribute:#1%
+    \c_group_end_token\hspace{2\tabcolsep}%
+    \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
+    \span\peek_meaning_ignore_spaces:NTF \\ {} {\\}                                               
   }
 
 \cs_new:Nn \__avm_initialise_document_commands: 
