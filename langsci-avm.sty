@@ -13,9 +13,8 @@
 %% 
 %% This work consists of the file  langsci-avm.dtx &
 %%                                 include/smallcaps-standalone.pdf.
-%%           and the derived files langsci-avm.ins,
-%%                                 langsci-avm.pdf,
-%%                                 langsci-avm.sty.
+%%           and the derived files langsci-avm.sty,
+%%                                 langsci-avm.pdf.
 %% 
 %% It may be distributed and/or modified under the conditions of the
 %% LaTeX Project Public License (LPPL), either version 1.3c of this
@@ -25,7 +24,7 @@
 %% This work is ``maintained'' (per LPPL maintenance status) by
 %% Felix Kopecky <felix.kopecky@langsci-press.org>.
 %% 
-%% The development version of the bundle can be found at
+%% The development version can be found at
 %% 
 %%    https://github.com/langsci/langsci-avm
 %% 
@@ -71,7 +70,9 @@
     tags .code:n           = {\cs_set:Nn \__avm_font_tag: {#1}},
     tags .initial:n        = {\footnotesize},
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
-    switch .initial:n      = { ! }
+    switch .initial:n      = { ! },
+    extraskip .dim_set:N   = \l__avm_extra_skip_dim,
+    extraskip .initial:n   = {\smallskipamount}
   }
 
 \bool_new:N \l__avm_mode_bool
@@ -100,9 +101,17 @@
       {  }
   }
 
+\cs_new:Nn \__avm_extra_skip:
+  {
+    \peek_meaning_ignore_spaces:NTF \\ {\vspace*{\l__avm_extra_skip_dim}} {}
+  }
+
 \cs_new:Nn \__avm_module_begin:
   {
-    \begin{tabular}{@{} >{\__avm_init_first_column:}l >{\__avm_init_second_column:}l @{}}
+    \begin{tabular}{@{}
+                    >{\__avm_init_first_column:}l
+                    >{\__avm_init_second_column:}l
+                    @{}}
   }
 \cs_new:Nn \__avm_module_end:
   {
@@ -117,7 +126,7 @@
 \cs_new:Nn \__avm_replace_rbrace:
   {
     \__avm_parse_output:nw
-      { \__avm_module_end:\right\rbrace\c_math_toggle_token  }
+      { \__avm_module_end:\right\rbrace\c_math_toggle_token\__avm_extra_skip: }
   }
 \cs_new:Nn \__avm_replace_lbrack:
   {
@@ -127,7 +136,7 @@
 \cs_new:Nn \__avm_replace_rbrack:
   {
     \__avm_parse_output:nw
-      { \__avm_module_end:\right\rbrack\c_math_toggle_token }
+      { \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip: }
   }
 \cs_new:Nn \__avm_replace_lparen:
   {
@@ -137,7 +146,7 @@
 \cs_new:Nn \__avm_replace_rparen:
   {
     \__avm_parse_output:nw
-      { \__avm_module_end:\right)\c_math_toggle_token  }
+      { \__avm_module_end:\right)\c_math_toggle_token\__avm_extra_skip: }
   }
 \cs_new:Nn \__avm_replace_langle:
   {
@@ -147,7 +156,7 @@
 \cs_new:Nn \__avm_replace_rangle:
   {
     \__avm_parse_output:nw
-      { \__avm_module_end:\right>\c_math_toggle_token  }
+      { \__avm_module_end:\right>\c_math_toggle_token\__avm_extra_skip: }
   }
 \cs_new:Nn \__avm_replace_plus:
   {

@@ -17,9 +17,8 @@ Copyright (C) 2020 by Felix Kopecky, Language Science Press
 
 This work consists of the file  langsci-avm.dtx &
                                 include/smallcaps-standalone.pdf.
-          and the derived files langsci-avm.ins,
-                                langsci-avm.pdf, 
-                                langsci-avm.sty.
+          and the derived files langsci-avm.sty, 
+                                langsci-avm.pdf.
                                 
 It may be distributed and/or modified under the conditions of the
 LaTeX Project Public License (LPPL), either version 1.3c of this
@@ -29,7 +28,7 @@ of this license is at <http://www.latex-project.org/lppl.txt>.
 This work is ``maintained'' (per LPPL maintenance status) by
 Felix Kopecky <felix.kopecky@langsci-press.org>.
 
-The development version of the bundle can be found at
+The development version can be found at
 
    https://github.com/langsci/langsci-avm
 
@@ -75,7 +74,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.1.0-beta -- 11th March 2020}
+% \date{Version 0.2.0-rc1 -- 6th May 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -129,6 +128,8 @@ Please report any bugs or feature requests to
 %   \item[|delimfactor =| \meta{factor} \hfill (initially |1000|)] Sets \cs{delimiterfactor}. The calculation for the minimum height of a delimiter is $y \cdot f /1000$, where $y$ is the height of the content and $f$ the value of  \cmd{delimfactor}. The default |1000| ensure that the delimiters' height is at least that of the structure.
 %   
 %   \item[|delimfall =| \meta{length} \hfill (initially |0pt|)] Controls \cs{delimitershortfall}, i.e. the maximum height that the delimiters can be shorter than the enclosed structure. The default |0pt| ensure that the delimiters are not shorter than the contents.
+%   
+%   \item[|extraskip| = \meta{length} \hfill (initially \cs{smallskipamount})] If a substructure is immediately followed by a \cmd{\\}, an extra amount of vertical skip is added so that the content of the next line, possibly another delimiter, does not clash with the delimiter in this line. 
 %   
 %   \item[|attributes =| \meta{font settings} \hfill (initially |\textbackslash scshape|)] The font for attributes, i.e. the first column of each structure.
 %   
@@ -471,7 +472,9 @@ Please report any bugs or feature requests to
     tags .code:n           = {\cs_set:Nn \__avm_font_tag: {#1}},
     tags .initial:n        = {\footnotesize},  
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
-    switch .initial:n      = { ! }
+    switch .initial:n      = { ! },
+    extraskip .dim_set:N   = \l__avm_extra_skip_dim,
+    extraskip .initial:n   = {\smallskipamount}
   }
 %    \end{macrocode}
 %    \end{macro}
@@ -527,17 +530,30 @@ Please report any bugs or feature requests to
 %    \end{macrocode}    
 %    \end{macro}
 
+%    \begin{macro}[int]{\__avm_extra_skip:}
+% This function is used together with the delimiter replacements. It checks whether the delimiter is followed by a line break, in which case an extra skip is automatically inserted
+%    \begin{macrocode}
+\cs_new:Nn \__avm_extra_skip:
+  {
+    \peek_meaning_ignore_spaces:NTF \\ {\vspace*{\l__avm_extra_skip_dim}} {}
+  }
+%    \end{macrocode}
+%    \end{macro}
+
 %    \begin{macro}[int]{\__avm_module_begin:,\__avm_module_end:,etc.}
 % The replacement instructions for \cs{__avm_parse:n}
 %    \begin{macrocode}
 \cs_new:Nn \__avm_module_begin: 
   { 
-    \begin{tabular}{@{} >{\__avm_init_first_column:}l >{\__avm_init_second_column:}l @{}} 
+    \begin{tabular}{@{} 
+                    >{\__avm_init_first_column:}l 
+                    >{\__avm_init_second_column:}l 
+                    @{}} 
   }
 \cs_new:Nn \__avm_module_end:
   { 
     \__avm_kern_unused_columns:
-    \end{tabular} 
+    \end{tabular}
   }
 \cs_new:Nn \__avm_replace_lbrace: 
   { 
@@ -547,7 +563,7 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_rbrace: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right\rbrace\c_math_toggle_token  } 
+      { \__avm_module_end:\right\rbrace\c_math_toggle_token\__avm_extra_skip: }
   }
 \cs_new:Nn \__avm_replace_lbrack: 
   { 
@@ -557,7 +573,7 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_rbrack: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right\rbrack\c_math_toggle_token } 
+      { \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip: } 
   }
 \cs_new:Nn \__avm_replace_lparen: 
   { 
@@ -567,7 +583,7 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_rparen: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right)\c_math_toggle_token  } 
+      { \__avm_module_end:\right)\c_math_toggle_token\__avm_extra_skip: } 
   } 
 \cs_new:Nn \__avm_replace_langle: 
   { 
@@ -577,7 +593,7 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_rangle: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right>\c_math_toggle_token  } 
+      { \__avm_module_end:\right>\c_math_toggle_token\__avm_extra_skip: } 
   }
 \cs_new:Nn \__avm_replace_plus:
   { 
