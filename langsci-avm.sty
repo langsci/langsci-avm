@@ -72,7 +72,10 @@
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
     switch .initial:n      = { ! },
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
-    extraskip .initial:n   = {\smallskipamount}
+    extraskip .initial:n   = {\smallskipamount},
+    style .choice:,
+    style / narrow .code:n = {\delimiterfactor=997\delimitershortfall5pt},
+    style / wide .code:n = {\delimiterfactor=1000\delimitershortfall0pt},
   }
 
 \bool_new:N \l__avm_mode_bool
