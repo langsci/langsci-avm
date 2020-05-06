@@ -122,7 +122,7 @@ Please report any bugs or feature requests to
 %   \meta{options} is a comma-separated list of |key = value| settings. The \marg{options} are the same as in \cs{avm}\oarg{options}. When inserted in \cs{avm}\oarg{options}, they apply locally, and globally if given to \cs{avmsetup}. Local settings always override global ones, and you can have any feasible number of \cs{avmsetup}s in your document.
 %   
 %   \begin{description}[style=nextline]
-%   \item[|stretch =| \meta{factor} \hfill (initially |1.15|)] Define \cs{arraystretch}, i.e. the factor of line spacing. Increasing this may be useful if there is too little vertical space between delimiters in subsequent rows.
+%   \item[|stretch =| \meta{factor} \hfill (initially |0.9|)] Define \cs{arraystretch}, i.e. the factor of line spacing. Increasing this may be useful if there is too little vertical space between delimiters in subsequent rows.
 %   
 %   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{arraycolsep}, i.e. horizontal space before and after any column. The first and second column will have |1\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
 %   
@@ -455,7 +455,7 @@ Please report any bugs or feature requests to
 \keys_define:nn { avm }
   {
     stretch .code:n        = {\def\arraystretch{#1}},
-    stretch .initial:n     = {1.15},
+    stretch .initial:n     = {0.9},
     columnsep .dim_set:N   = \arraycolsep,
     columnsep .initial:n   = {.5ex},
     delimfactor .int_set:N = \delimiterfactor,
