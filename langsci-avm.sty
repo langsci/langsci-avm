@@ -69,6 +69,8 @@
     values .initial:n      = {\itshape},
     tags .code:n           = {\cs_set:Nn \__avm_font_tag: {#1}},
     tags .initial:n        = {\footnotesize},
+    apptovalues .code:n    = {\cs_set:Nn \__avm_deinit_second_column: {#1}},
+    apptovalues .initial:n = {\/},
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
     switch .initial:n      = { ! },
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
@@ -114,6 +116,7 @@
     \begin{tabular}{@{}
                     >{\__avm_init_first_column:}l
                     >{\__avm_init_second_column:}l
+                    <{\__avm_deinit_second_column:}
                     @{}}
   }
 \cs_new:Nn \__avm_module_end:
