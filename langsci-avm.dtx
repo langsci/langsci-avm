@@ -444,7 +444,11 @@ Please report any bugs or feature requests to
 % \end{minipage}
 % 
 % \subsection{Switching from Christopher Manning's \pkg{avm} package}\label{sec:switching}
-% Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, the ``active mode'' has disappeared, there is now a single way of sorting (see \cs{type}, which replaces \cs{asort} and \cs{osort}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). Please refer to Section~\ref{sec:caveats} for features known from \pkg{avm} that are not yet available in \pkg{langsci-avm}.
+% Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, \pkg{langsci-avm} doesn't disthinguis between ``active'' and ``passive''' modes, there is now a single way of sorting (see \cs{type}, which replaces \cs{asort} and \cs{osort}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). 
+% 
+% Paths can be printed with a normal \cmd{|}, and $\oplus$ and other relation symbols can be input more easily (see Section~\ref{sec:commands}), though the package will also work with \verb+$|$+ and \verb+$\oplus$+. 
+% 
+% \pkg{langsci-avm} is not yet able to draw lines in elements of AVMs. This feature is planned for Version 0.3.
 % 
 % \subsection{Tweaking the \texttt{attribute} font with with \pkg{fontspec}}
 % The attributes in your structure are usually type set in \textsc{small caps}. That means that your input should usually be lowercase, unless capitals along small capitals in that attribute's description make sense. Some fonts also provide ``old style'' figures (also known as ``text'' or ``medieval'' figures). Those can be enabled with \pkg{fontspec}'s |Numbers=OldStyle| feature. 
