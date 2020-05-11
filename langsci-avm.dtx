@@ -74,7 +74,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.2.0-rc1 -- 6th May 2020}
+% \date{Version 0.2.0 -- 15th May 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -111,7 +111,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avm} \oarg{options} \marg{structure}
 %   \end{syntax}
-%   The heart of this package and its root document comand is |\avm|. It currently runs only in text mode, but can be run in math mode if it is escaped with |$\avm$|. In the scope of the command, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. For a description of the \meta{options}, see Section~\ref{sec:options}.
+%   The heart of this package and its root document comand is |\avm|. In the scope of the command, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. For a description of the \meta{options}, see Section~\ref{sec:options}.
 % \end{function}
 %  
 % \subsection{Commands available in the scope of \texttt{\textbackslash avm}}\label{sec:commands}
@@ -127,7 +127,7 @@ Please report any bugs or feature requests to
 %   
 %   A \meta{structure} is basically the content of a stylised \cmd{tabular}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
 %   
-%   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have exactly one \cmd{&} in your \meta{structure}. In the current beta version, display issues may appear in some structures if none is given.\bigskip\\
+%   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have at least some lines with a \cmd{&} in your \meta{structure}. Currently, display issues may appear in some structures if none are given.\bigskip\\
 %   \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
@@ -158,7 +158,7 @@ Please report any bugs or feature requests to
 % \begin{syntax}
 %     \cmd{!} \meta{text} \cmd{!}
 %   \end{syntax}
-%   Escapes the |avm| mode so that all delimiters can be used as usual characters. If you need |!| as a regular character, see \cs{avmsetup} to change the |switch| option.
+%   Escapes the |avm| mode so that all delimiters can be used as usual characters. If you need |!| as a regular character, see Section~\ref{sec:options} for how to change the |switch|.
 % \end{function}
 % 
 % \begin{function}[updated=2020-04-29]{\tag,\0,\1,...,\9}
@@ -166,7 +166,7 @@ Please report any bugs or feature requests to
 %    \cs{tag} \marg{identifier}
 %    \cmd{\0, \1, \2, \3, \4, \5, \6, \7, \8, \9}
 %   \end{syntax}
-%   \cs{tag} puts its \marg{identifier} in a box, more precisely an \cs{fbox}. Within the box, the |tags| font is applied. \cs{1}, ..., \cs{9} are shortcuts to \cs{tag} and place the respective number in the box. For example, \cs{4} is equivalent to |\tag{4}|. The shortcuts do not take any arguments.
+%   \cs{tag} puts its \marg{identifier} in a box, more precisely an \cs{fbox}. Within the box, the |tags| font is applied. \cs{0}, \cs{1}, ..., \cs{9} are shortcuts to \cs{tag} and place the respective number in the box. For example, \cs{4} is equivalent to |\tag{4}|. The shortcuts do not take any arguments.
 %   
 % If you want to use this command outside an AVM, you can obtain, for example, \avm{\4}, by using |\avm{\4}|, or the equivalent  |{\fboxsep.25ex\fbox{\footnotesize 4}}|.\bigskip\\   
 % \noindent\begin{minipage}{.6\linewidth}
@@ -238,13 +238,13 @@ Please report any bugs or feature requests to
 % \end{function}
 % 
 % \subsection{User-configurable settings}\label{sec:options}
-% You can customise many aspects of how an AVM is printed, including the fonts, and spacing between delimiters and content. You can apply them locally via the \oarg{options} of \cs{avm}, or using \cs{avmsetup}. And you can also define your own styles and use them via the \oarg{style = } option in \cs{avm}. 
+% You can customise many aspects of how an AVM is printed, including the fonts or spacing between delimiters and content. You can apply them locally via the \oarg{options} of \cs{avm} or by using \cs{avmsetup}. And you can also define your own styles and use them via the \oarg{style = } option in \cs{avm}. 
 % 
 % \begin{function}{\avmsetup}
 %   \begin{syntax}
 %     \cs{avmsetup} \marg{options}
 %   \end{syntax}
-%   \meta{options} is a comma-separated list of |key = value| settings. See Section~\ref{sec:options} for a list of user-configurable options. The \marg{options} are the same as in \cs{avm}\oarg{options}. When inserted in \cs{avm}\oarg{options}, they apply locally, and globally if given to \cs{avmsetup}. Local settings always override global ones, and you can have any feasible number of \cs{avmsetup}s in your document.
+%   \marg{options} is a comma-separated list of |key = value| settings. See Section~\ref{sec:options} for a list of user-configurable options. The \marg{options} are the same as in \cs{avm}\oarg{options}. When inserted in \cs{avm}\oarg{options}, they apply locally, and globally if given to \cs{avmsetup}. Local settings always override global ones, and you can have any feasible number of \cs{avmsetup}s in your document.
 % 
 % \end{function}
 % 
@@ -252,7 +252,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avmdefinestyle} \marg{name} \marg{settings}
 %   \end{syntax}
-% Instead of applying settings globally or per AVM, you can also define styles and assign them to AVMs, as in |\avm[style=|\meta{name}|]{...}|. The \meta{settings} are a comma-separated list of |key = value| settings, and should be a subset of the settings from \cs{avmsetup}. For example, the following |plain| style highlights neither attributes nor values:
+% Instead of applying settings globally or per AVM, you can also define styles and assign them to AVMs, as in |\avm[style=|\meta{name}|]{...}|. The \meta{settings} are a comma-separated list of |key = value| settings, and should be a subset of the settings from \cs{avmsetup}. For example, the following |plain| style highlights neither attributes, values, nor types:
 % 
 % \begin{verbatim}
 % \avmdefinestyle{plain}{attributes=\normalfont,
@@ -267,11 +267,11 @@ Please report any bugs or feature requests to
 % \noindent Now to the list of settings you can actually apply:
 % 
 %   \begin{description}[style=nextline]
-%   \item[|style =| \meta{name} \hfill (initially empty)] In addition to any style that you possibly define yourself, a style |narrow| is pre-defined in the package. It sets |delimfactor| to |997| and |delimfall| to |5pt|, which is the recommended setting in the \textit{\TeX book}.
+%   \item[|style =| \meta{name} \hfill (initially empty)] In addition to any style that you possibly define yourself, a style |narrow| is pre-defined in the package (see Section~\ref{sec:spacing}).
 % 
 %   \item[|stretch =| \meta{factor} \hfill (initially |0.9|)] Define \cs{arraystretch}, i.e. a factor in the determination of line height.
 %   
-%   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{tabcolsep}, i.e. horizontal space before and after any column. The first and second column will have |1\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
+%   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{tabcolsep}, i.e. horizontal space between columns. The first and second column will have |0\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
 %   
 %   \item[|delimfactor =| \meta{factor} \hfill (initially |1000|)] Sets \cs{delimiterfactor}. The calculation for the minimum height of a delimiter is $y \cdot f /1000$, where $y$ is the height of the content and $f$ the value of  \cmd{delimfactor}. The default |1000| ensure that the delimiters' height is at least that of the structure.
 %   
@@ -292,8 +292,8 @@ Please report any bugs or feature requests to
 % 
 % \section{Applications}
 % 
-% \subsection{Spacing and size of delimiters}
-% \pkg{langsci-avm} automatically detects if the end of a sub-structure is follwed by a line break. This is useful to find cases in which two sub-structures are printed immediately below each other, and to add extra spacing (the |extraskip| from the options). This automatic detection can be suppressed with \cs{relax}. See below for the effect of that detection:\bigskip\\
+% \subsection{Spacing and size of delimiters}\label{sec:spacing}
+% \pkg{langsci-avm} automatically detects if the end of a sub-structure is followed by a line break. This is useful to find cases in which two sub-structures are printed immediately below each other, and to add extra spacing (the |extraskip| from the options). This automatic detection can be suppressed with \cs{relax}. See below for the effect of that detection:\bigskip\\
 % \noindent\begin{minipage}[c]{.5\textwidth}\centering
 % \begin{verbatim}
 % \avm{[ [attr1 & val1 \\ 
@@ -324,7 +324,7 @@ Please report any bugs or feature requests to
 %      ]}
 % \end{minipage}\pagebreak
 % 
-% If many delimiters are nested, this occasionally results in larger delimiter sizes. There is a pre-defined |narrow| style that resets |delimfall| and |delimfactor| to the values recommended in the \textit{\TeX book}, which results in a more compact appearance:\bigskip\\ 
+% If many delimiters are nested, this occasionally results in larger delimiter sizes. There is a pre-defined |narrow| style that resets |delimfall| (to |5pt|) and |delimfactor| (to |997|), which are  the values recommended in the \textit{\TeX book}. This results in a more compact appearance:\bigskip\\ 
 % \noindent\begin{minipage}[t]{.5\textwidth}\centering
 % \begin{verbatim}
 % \avm{[ attr \{<\1>\}]}
@@ -416,7 +416,7 @@ Please report any bugs or feature requests to
 % \xe
 % \end{verbatim}
 % 
-% \noindent Examples typed with \pkg{linguex} can be combined with \cs{evnup} from \pkg{lingmacros} to align AVMs (many thanks to Jamie Findlay for pointing this out.):
+% \noindent Examples typed with \pkg{linguex} can be combined with \cs{evnup} from \pkg{lingmacros} to align AVMs (many thanks to Jamie Findlay for pointing this out):
 % 
 % \begin{verbatim}
 % \ex. \envup{\avm{[ attr1 & val1\\
@@ -444,7 +444,7 @@ Please report any bugs or feature requests to
 % \end{minipage}
 % 
 % \subsection{Switching from Christopher Manning's \pkg{avm} package}\label{sec:switching}
-% Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, \pkg{langsci-avm} doesn't disthinguis between ``active'' and ``passive''' modes, there is now a single way of sorting (see \cs{type}, which replaces \cs{asort} and \cs{osort}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). 
+% Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, \pkg{langsci-avm} doesn't distinguish between ``active'' and ``passive'' modes, there is now a single way of sorting (see \cs{type}, which replaces \cs{asort} and \cs{osort}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). 
 % 
 % Paths can be printed with a normal \cmd{|}, and $\oplus$ and other relation symbols can be input more easily (see Section~\ref{sec:commands}), though the package will also work with \verb+$|$+ and \verb+$\oplus$+. 
 % 
@@ -508,7 +508,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-03-11} {0.1.0-beta}
+  {2020-05-15} {0.2.0}
   {AVMs and feature structures in LaTeX3}
 %    \end{macrocode}
 %    \begin{macro}{\avm}
