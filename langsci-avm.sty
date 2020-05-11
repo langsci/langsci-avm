@@ -80,6 +80,14 @@
     style / wide .code:n = {\delimiterfactor=1000\delimitershortfall0pt},
   }
 
+\NewDocumentCommand{\avmdefinestyle}{ m m }
+  {
+    \keys_define:nn { avm }
+      {
+        style / #1 .code:n = { \keys_set:nn { avm } { #2 } }
+      }
+  }
+
 \bool_new:N \l__avm_mode_bool
 \seq_new:N \l__avm_parens_tracker
 

@@ -447,7 +447,7 @@ Please report any bugs or feature requests to
   }
 %    \end{macrocode}
 %    \end{macro}
-%
+% 
 %    \begin{macro}{\avmsetup}
 % Forward the key-value settings given as the optional argument to \cs{avm} to the keys defined in |\keys_define:nn { avm }|. For the meaning of these keys and initial values, see Section~\ref{sec:options}.
 % 
@@ -482,6 +482,19 @@ Please report any bugs or feature requests to
     style .choice:,
     style / narrow .code:n = {\delimiterfactor=997\delimitershortfall5pt},
     style / wide .code:n = {\delimiterfactor=1000\delimitershortfall0pt},
+  }
+%    \end{macrocode}
+%    \end{macro}
+  
+%    \begin{macro}{\avmdefinestyle}
+% Define a style to be used together with the |style| key.
+%    \begin{macrocode}
+\NewDocumentCommand{\avmdefinestyle}{ m m }
+  {
+    \keys_define:nn { avm }
+      {
+        style / #1 .code:n = { \keys_set:nn { avm } { #2 } }
+      }
   }
 %    \end{macrocode}
 %    \end{macro}
