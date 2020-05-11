@@ -191,7 +191,8 @@
 \cs_new_protected:Npn \__avm_controls_type_starred:n #1
   {
     \bool_set_false:N \l__avm_in_first_column
-    \normalfont\__avm_font_type: #1\span\hspace*{-2\tabcolsep}
+    \normalfont\__avm_font_type: #1
+    \__avm_deinit_second_column:\span\hspace*{-2\tabcolsep}
     \peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
 \cs_new_protected:Npn \__avm_controls_punk:nn #1 #2
@@ -200,7 +201,8 @@
     \normalfont\c_group_begin_token\__avm_font_attribute:#1%
     \c_group_end_token\hspace{2\tabcolsep}%
     \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
-    \span\hspace*{-2\tabcolsep}\peek_meaning_ignore_spaces:NTF \\ {} {\\}
+    \__avm_deinit_second_column:\span\hspace*{-2\tabcolsep}
+    \peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
 
 \cs_new:Nn \__avm_initialise_document_commands:
