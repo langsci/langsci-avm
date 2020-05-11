@@ -292,6 +292,53 @@ Please report any bugs or feature requests to
 % 
 % \section{Applications}
 % 
+% \subsection{Spacing and size of delimiters}
+% \pkg{langsci-avm} automatically detects if the end of a sub-structure is follwed by a line break. This is useful to find cases in which two sub-structures are printed immediately below each other, and to add extra spacing (the |extraskip| from the options). This automatic detection can be suppressed with \cs{relax}. See below for the effect of that detection:\bigskip\\
+% \noindent\begin{minipage}[c]{.5\textwidth}\centering
+% \begin{verbatim}
+% \avm{[ [attr1 & val1 \\ 
+%         attr2 & val2 ] \\
+%        [attr1 & val1 \\ 
+%         attr2 & val2 ]
+%      ]}
+% \end{verbatim}
+% 
+% \avm{[ [attr1 & val1 \\ 
+%         attr2 & val2 ] \\
+%        [attr1 & val1 \\ 
+%         attr2 & val2 ]
+%      ]}
+% \end{minipage}\begin{minipage}[c]{.5\textwidth}\centering
+% \begin{verbatim}
+% \avm{[ [attr1 & val1 \\ 
+%         attr2 & val2 ] \relax\\
+%        [attr1 & val1 \\ 
+%         attr2 & val2 ]
+%      ]}
+% \end{verbatim}
+% 
+% \avm{[ [attr1 & val1 \\ 
+%         attr2 & val2 ] \relax\\
+%        [attr1 & val1 \\ 
+%         attr2 & val2 ]
+%      ]}
+% \end{minipage}\pagebreak
+% 
+% If many delimiters are nested, this occasionally results in larger delimiter sizes. There is a pre-defined |narrow| style that resets |delimfall| and |delimfactor| to the values recommended in the \textit{\TeX book}, which results in a more compact appearance:\bigskip\\ 
+% \noindent\begin{minipage}[t]{.5\textwidth}\centering
+% \begin{verbatim}
+% \avm{[ attr \{<\1>\}]}
+% \end{verbatim}
+% 
+% \avm{[ attr <\{\1\}>]}
+% \end{minipage}\begin{minipage}[t]{.5\textwidth}\centering
+% \begin{verbatim}
+% \avm[style=narrow]{[ attr \{<\1>\}]}
+% \end{verbatim}
+% 
+% \avm[style=narrow]{[ attr <\{\1\}>]}
+% \end{minipage}  
+% 
 % \subsection{Disjunctions and other relations}
 % Sometimes AMVs are placed beside other content to express disjunctions or other relations. In \pkg{langsci-avm} this is done naturally:\bigskip\\
 % \noindent\begin{minipage}[c]{.5\textwidth}
