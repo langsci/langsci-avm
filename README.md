@@ -1,4 +1,6 @@
 # langsci-avm
+[![ctan version](https://img.shields.io/ctan/v/langsci-avm)](https://ctan.org/pkg/langsci-avm) 
+
 AVMs and feature structures in LaTeX3.
 
 This repository contains the source file `langsci-avm.dtx`, the compiled and ready-to-use `langsci-avm.sty`, and the documentation `langsci-avm.pdf`.
