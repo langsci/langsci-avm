@@ -288,6 +288,7 @@ Please report any bugs or feature requests to
 %   \item[|types =| \meta{font settings} \hfill (initially |\textbackslash itshape|)] The font used in \cs{type} and \cs{type*}.
 %   \item[|tags =| \meta{format settings} \hfill (initially |\textbackslash footnotesize|)] The font (size) used in \cs{tag} and the shortcuts \cs{1}...\cs{9}.
 %   \item[|switch =| \meta{token} \hfill (initially |!|)] Define the escape token. Change this if you need to use ``!'' as a text glyph.
+%   \item[|align =| \meta{pos \hfill (initially |tc|)] Specify vertical alignment, as in |tabular| environment (|t|op, |c|enter or |b|ottom), plus a special value |tc| which means top in the text mode and center in the math mode.
 %   \end{description}
 % 
 % \section{Applications}
@@ -514,7 +515,9 @@ Please report any bugs or feature requests to
 %    \begin{macro}{\avm}
 % This document command initialises an AVM. The first, optional argumet is a key-value list of settings (see \cs{keys_define:nn} below) and the second is the AVM itself, given in the syntax described in this documentation.
 % 
-% \cs{avm} enters a group so that keys- and macro-assignemts remain local. It then initialises the commands and shortcuts made locally available, sets its mode to |true| and assigns the keys as given in the optional argument (if any). After the wrapper \cs{avm_wrap:n} is called, the group is closed.
+% \cs{avm} enters a group so that keys- and macro-assignments remain local. It then initialises the commands and shortcuts made locally available, sets its mode to |true| and assigns the keys as given in the optional argument (if any). Next, the special alignment |tc| is resolved with respect to the mode, math or text. The result of the wrapper \cs{avm_wrap:n} is stored in a local box, used by the alignment procedure. Finally, the group is closed.
+% 
+% Alignment. Nothing needs to be done for center alignment.  Top and bottom alignment are implemented by typesetting the AVM twice.\footnote{This is the most straightforward way (I can think of) which guarantees that we will get correct top/bottom alignment even if the topmost/bottommost line is embedded in several inner AVMs.} The first pass typesets the |tabular| environments using vertical position |t| or |b|. This produces the baseline we want, but all the inner AVMs have this alignment as well, and that, we don't want.  So we typeset the AVM again, with center alignment, and then adjust its vertical position based on the height and depth of the box produces in the first pass.  The vertical adjustment code is adapted from package |delarray|.
 %
 %    \begin{macrocode}
 \NewDocumentCommand{\avm}{ O{} +m }
@@ -523,7 +526,18 @@ Please report any bugs or feature requests to
     \__avm_initialise_document_commands:
     \bool_set_true:N \l__avm_mode_bool
     \keys_set:nn { avm } { #1 }
-    \__avm_wrap:n { #2 }
+    \str_if_eq:VnT \l__avm_align_tl {tc}
+      { \tl_set:Nx \l__avm_align_tl { \mode_if_math:TF {c} {t} } }
+    \hbox_set:Nn \l_tmpa_box { \__avm_wrap:n { #2 } }
+    \str_if_eq:VnTF \l__avm_align_tl {c}
+      { \box_use_drop:N \l_tmpa_box }
+      {
+        \tl_set:Nn \l__avm_align_tl {c}
+        \box_move_down:nn
+          { (\box_dp:N \l_tmpa_box - \box_ht:N \l_tmpa_box)
+            / 2 + \fontdimen22 \textfont2 }
+          { \hbox:n { \__avm_wrap:n { #2 } } }
+      }
     \c_group_end_token
   }
 %    \end{macrocode}
@@ -562,6 +576,8 @@ Please report any bugs or feature requests to
     extraskip .initial:n   = {\smallskipamount},
     style .choice:,
     style / narrow .code:n = {\delimiterfactor=997\delimitershortfall5pt},
+    align .tl_set:N        = \l__avm_align_tl,
+    align .initial:n       = {tc},
   }
 %    \end{macrocode}
 %    \end{macro}
@@ -598,6 +614,13 @@ Please report any bugs or feature requests to
 % A boolean to check whether we are in the first column (value |true|) or in the second (value |false|).
 %    \begin{macrocode}
 \bool_new:N \l__avm_in_first_column
+%    \end{macrocode}
+%    \end{variable}
+
+%    \begin{variable}{\tl__avm_left_tl}
+% This token list is used to store the opening delimiter.
+%    \begin{macrocode}
+\tl_new:N \tl__avm_left_tl
 %    \end{macrocode}
 %    \end{variable}
 
@@ -640,61 +663,74 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
 
-%    \begin{macro}[int]{\__avm_module_begin:,\__avm_module_end:,etc.}
-% The replacement instructions for \cs{__avm_parse:n}
+%    \begin{macro}[int]{\__avm_module_begin:n}
+% This macro opens the |tabular| environment, with the specified vertical alignment. The opening delimiter (|#1|) is saved for later.
 %    \begin{macrocode}
-\cs_new:Nn \__avm_module_begin: 
-  { 
-    \begin{tabular}{@{} 
-                    >{\__avm_init_first_column:}l 
-                    >{\__avm_init_second_column:}l 
+\cs_new:Nn \__avm_module_begin:n
+  {
+    \tl_set:Nn \tl__avm_left_tl {#1}
+    \begin{tabular}[\l__avm_align_tl]{@{}
+                    >{\__avm_init_first_column:}l
+                    >{\__avm_init_second_column:}l
                     <{\__avm_deinit_second_column:}
-                    @{}} 
+                    @{}}
   }
-\cs_new:Nn \__avm_module_end:
-  { 
+%    \begin{macro}[int]{\__avm_module_end:}
+% This macro closes the |tabular| environment and surrounds it by delimiters. The code is adapted from package |delarray|.
+%    \begin{macrocode}
+\cs_new:Nn \__avm_module_end:n
+  {
     \__avm_kern_unused_columns:
     \end{tabular}
+    \box_set_to_last:N \l_tmpa_box
+    \box_move_down:nn
+      { (\box_dp:N \l_tmpa_box - \box_ht:N \l_tmpa_box) / 2
+        + \fontdimen22 \textfont2 }
+      {
+        \hbox:n
+        {
+          \c_math_toggle_token \left \tl__avm_left_tl
+            \vcenter {                                 % What is the LaTeX3 way?
+              \box_use_drop:N \l_tmpa_box
+            }
+          \right #1 \c_math_toggle_token
+        }
+      }
   }
-\cs_new:Nn \__avm_replace_lbrace: 
-  { 
-    \__avm_parse_output:nw 
-      { \c_math_toggle_token\left\lbrace\__avm_module_begin: } 
+%    \begin{macro}[int]{\__avm_replace_lbrace:,\__avm_replace_rbrace:,etc.}
+% The replacement instructions for \cs{__avm_parse:n}.
+%    \begin{macrocode}
+\cs_new:Nn \__avm_replace_lbrace:
+  {
+    \__avm_parse_output:nw { \__avm_module_begin:n \lbrace }
   }
-\cs_new:Nn \__avm_replace_rbrace: 
-  { 
-    \__avm_parse_output:nw 
-      { \__avm_module_end:\right\rbrace\c_math_toggle_token\__avm_extra_skip: }
+\cs_new:Nn \__avm_replace_rbrace:
+  {
+    \__avm_parse_output:nw { \__avm_module_end:n \rbrace }
   }
-\cs_new:Nn \__avm_replace_lbrack: 
-  { 
-    \__avm_parse_output:nw 
-      { \c_math_toggle_token\left\lbrack\__avm_module_begin: } 
-  }     
-\cs_new:Nn \__avm_replace_rbrack: 
-  { 
-    \__avm_parse_output:nw 
-      { \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip: } 
+\cs_new:Nn \__avm_replace_lbrack:
+  {
+    \__avm_parse_output:nw { \__avm_module_begin:n \lbrack }
   }
-\cs_new:Nn \__avm_replace_lparen: 
-  { 
-    \__avm_parse_output:nw 
-      { \c_math_toggle_token\left(\__avm_module_begin: } 
-  } 
-\cs_new:Nn \__avm_replace_rparen: 
-  { 
-    \__avm_parse_output:nw 
-      { \__avm_module_end:\right)\c_math_toggle_token\__avm_extra_skip: } 
-  } 
-\cs_new:Nn \__avm_replace_langle: 
-  { 
-    \__avm_parse_output:nw 
-      { \c_math_toggle_token\left<\__avm_module_begin: } 
-  } 
-\cs_new:Nn \__avm_replace_rangle: 
-  { 
-    \__avm_parse_output:nw 
-      { \__avm_module_end:\right>\c_math_toggle_token\__avm_extra_skip: } 
+\cs_new:Nn \__avm_replace_rbrack:
+  {
+    \__avm_parse_output:nw { \__avm_module_end:n \rbrack }
+  }
+\cs_new:Nn \__avm_replace_lparen:
+  {
+    \__avm_parse_output:nw { \__avm_module_begin:n ( }
+  }
+\cs_new:Nn \__avm_replace_rparen:
+  {
+    \__avm_parse_output:nw { \__avm_module_end:n ) }
+  }
+\cs_new:Nn \__avm_replace_langle:
+  {
+    \__avm_parse_output:nw { \__avm_module_begin:n < }
+  }
+\cs_new:Nn \__avm_replace_rangle:
+  {
+    \__avm_parse_output:nw { \__avm_module_end:n > }
   }
 \cs_new:Nn \__avm_replace_plus:
   { 
