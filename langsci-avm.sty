@@ -43,6 +43,7 @@
   {
     \c_group_begin_token
     \__avm_initialise_document_commands:
+    \__avm_initialise_custom_commands:
     \bool_set_true:N \l__avm_mode_bool
     \keys_set:nn { avm } { #1 }
     \__avm_wrap:n { #2 }
@@ -71,10 +72,14 @@
     tags .initial:n        = {\footnotesize},
     apptovalues .code:n    = {\cs_set:Nn \__avm_deinit_second_column: {#1}},
     apptovalues .initial:n = {\/},
+    singleton .code:n      = {\cs_set:Nn \__avm_font_singleton: {#1}},
+    singleton .initial:n   = {\normalfont},
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
     switch .initial:n      = { ! },
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
     extraskip .initial:n   = {\smallskipamount},
+    customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
+    customise .initial:n   = { },
     style .choice:,
     style / narrow .code:n = {\delimiterfactor=997\delimitershortfall5pt},
   }
@@ -134,7 +139,12 @@
 \cs_new:Nn \__avm_replace_lbrace:
   {
     \__avm_parse_output:nw
-      { \c_math_toggle_token\left\lbrace\__avm_module_begin: }
+      { \c_math_toggle_token\left\lbrace\__avm_module_begin:
+        \peek_catcode_collect_inline:Nn A
+          {
+            \peek_charcode_ignore_spaces:NTF \rbrace {\normalfont\__avm_font_singleton: ##1} {##1}
+          }
+      }
   }
 \cs_new:Nn \__avm_replace_rbrace:
   {
@@ -144,7 +154,13 @@
 \cs_new:Nn \__avm_replace_lbrack:
   {
     \__avm_parse_output:nw
-      { \c_math_toggle_token\left\lbrack\__avm_module_begin: }
+      {
+        \c_math_toggle_token\left\lbrack\__avm_module_begin:
+        \peek_catcode_collect_inline:Nn A
+          {
+            \peek_charcode_ignore_spaces:NTF ] {\normalfont\__avm_font_singleton: ##1} {##1}
+          }
+     }
   }
 \cs_new:Nn \__avm_replace_rbrack:
   {
@@ -154,7 +170,12 @@
 \cs_new:Nn \__avm_replace_lparen:
   {
     \__avm_parse_output:nw
-      { \c_math_toggle_token\left(\__avm_module_begin: }
+      { \c_math_toggle_token\left(\__avm_module_begin:
+        \peek_catcode_collect_inline:Nn A
+          {
+            \peek_charcode_ignore_spaces:NTF ) {\normalfont\__avm_font_singleton: ##1} {##1}
+          }
+      }
   }
 \cs_new:Nn \__avm_replace_rparen:
   {
@@ -164,7 +185,12 @@
 \cs_new:Nn \__avm_replace_langle:
   {
     \__avm_parse_output:nw
-      { \c_math_toggle_token\left<\__avm_module_begin: }
+      { \c_math_toggle_token\left<\__avm_module_begin:
+        \peek_catcode_collect_inline:Nn A
+          {
+            \peek_charcode_ignore_spaces:NTF > {\normalfont\__avm_font_singleton: ##1} {##1}
+          }
+      }
   }
 \cs_new:Nn \__avm_replace_rangle:
   {
