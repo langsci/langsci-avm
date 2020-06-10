@@ -665,12 +665,7 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_lbrace: 
   { 
     \__avm_parse_output:nw 
-      { \c_math_toggle_token\left\lbrace\__avm_module_begin:
-        \peek_catcode_collect_inline:Nn A 
-          {  
-            \peek_charcode_ignore_spaces:NTF \rbrace {\normalfont\__avm_font_singleton: ##1} {##1} 
-          }
-      } 
+      {  \c_math_toggle_token\left\lbrace\__avm_module_begin:  } 
   }
 \cs_new:Nn \__avm_replace_rbrace: 
   { 
@@ -680,43 +675,27 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_replace_lbrack: 
   { 
     \__avm_parse_output:nw 
-      { 
-        \c_math_toggle_token\left\lbrack\__avm_module_begin:
-        \peek_catcode_collect_inline:Nn A 
-          {  
-            \peek_charcode_ignore_spaces:NTF ] {\normalfont\__avm_font_singleton: ##1} {##1} 
-          }
-     } 
+      {  \c_math_toggle_token\left\lbrack\__avm_module_begin:  } 
   }     
 \cs_new:Nn \__avm_replace_rbrack: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip: } 
+      {  \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip:  } 
   }
-\cs_new:Nn \__avm_replace_lparen: 
-  { 
+\cs_new:Nn \__avm_replace_lparen:
+  {    
     \__avm_parse_output:nw 
-      { \c_math_toggle_token\left(\__avm_module_begin:
-        \peek_catcode_collect_inline:Nn A 
-          {  
-            \peek_charcode_ignore_spaces:NTF ) {\normalfont\__avm_font_singleton: ##1} {##1} 
-          }
-      } 
+      {  \c_math_toggle_token\left(\__avm_module_begin:  }
   } 
 \cs_new:Nn \__avm_replace_rparen: 
   { 
     \__avm_parse_output:nw 
-      { \__avm_module_end:\right)\c_math_toggle_token\__avm_extra_skip: } 
+      {  \__avm_module_end:\right)\c_math_toggle_token\__avm_extra_skip:  } 
   } 
 \cs_new:Nn \__avm_replace_langle: 
   { 
     \__avm_parse_output:nw 
-      { \c_math_toggle_token\left<\__avm_module_begin:
-        \peek_catcode_collect_inline:Nn A 
-          {  
-            \peek_charcode_ignore_spaces:NTF > {\normalfont\__avm_font_singleton: ##1} {##1} 
-          }
-      } 
+      {  \c_math_toggle_token\left<\__avm_module_begin:  } 
   } 
 \cs_new:Nn \__avm_replace_rangle: 
   { 
