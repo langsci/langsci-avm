@@ -74,7 +74,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.2.0 -- 15th May 2020}
+% \date{Version 0.2.0rc2 -- 24th June 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -509,7 +509,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-05-15} {0.2.0}
+  {2020-06-24} {0.2.0-rc2}
   {AVMs and feature structures in LaTeX3}
 %    \end{macrocode}
 %    \begin{macro}{\avm}
@@ -523,6 +523,7 @@ Please report any bugs or feature requests to
     \c_group_begin_token
     \__avm_initialise_document_commands:
     \__avm_initialise_custom_commands:
+    \tl_use:N \l__avm_defined_commands_tl
     \bool_set_true:N \l__avm_mode_bool
     \keys_set:nn { avm } { #1 }
     \__avm_wrap:n { #2 }
@@ -584,12 +585,27 @@ Please report any bugs or feature requests to
   }
 %    \end{macrocode}
 %    \end{macro}
+
+%    \begin{macro}{\avmdefinecommand}
+% A factory function that creates commands for the layout of sub-structures. The first argument describes the commands name, the second any (optional) label. If a star is used, the lay out command does not advance to the next column, and the last argument gives the style instructions for the following (sub-structures). \cs{cs_set:cpn} ensures that the scope of the manufactured commands will be local to \cs{avm}.
+%    \begin{macrocode}
+\NewDocumentCommand{\avmdefinecommand}{ m o s m }
+  {
+    \tl_put_right:Nn \l__avm_defined_commands_tl
+      {
+        \cs_set:cpn { #1 } 
+          { #2 \IfBooleanF { #3 } { & } \avmsetup{ #4 } }
+      }
+  }
+%    \end{macrocode}
+%    \end{macro}
   
 %    \begin{variable}{\l__avm_mode_bool, \l__avm_parens_tracker}
-% We need an auxiliary variable to store the current mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced.
+% We need an auxiliary variable to store the current mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced. \cs{l__avm_defined_commands_tl} is a token list that stores any commands provided by the user via \cs{avmdefinecommand}
 %    \begin{macrocode}
 \bool_new:N \l__avm_mode_bool
 \seq_new:N \l__avm_parens_tracker
+\tl_new:N \l__avm_defined_commands_tl
 %    \end{macrocode}
 %    \end{variable}
 
