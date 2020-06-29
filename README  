@@ -1,0 +1,36 @@
+langsci-avm is aimed at typesetting beautiful feature structures, 
+also known as attribute-value matrices (AVMs), for use in linguistics.
+
+The package provides a minimal and easy to read syntax. 
+It depends only on the array package and can be placed almost everywhere, 
+in particular in footnotes or graphs and tree structures. The package is meant
+as an update to, and serves the same purpose as, Christopher Manning’s 
+avm package, but shares no code base with that package.
+
+langsci-avm was developed at Language Science Press to help in the
+production of scientific texts in linguistics.
+
+Copyright (C) 2020 by Felix Kopecky, Language Science Press
+
+This work consists of the file  langsci-avm.dtx 
+          and the derived files langsci-avm.ins,
+                                langsci-avm.pdf, 
+                                langsci-avm.sty.
+                                
+It may be distributed and/or modified under the conditions of the
+LaTeX Project Public License (LPPL), either version 1.3c of this
+license or (at your option) any later version. The latest version
+of this license is at <http://www.latex-project.org/lppl.txt>.
+
+This work is ``maintained'' (per LPPL maintenance status) by
+Felix Kopecky <felix.kopecky@langsci-press.org>.
+
+The development version of the bundle can be found at
+
+   https://github.com/langsci/langsci-avm
+
+for those people who are interested. Pull requests are welcome.
+
+Please report any bugs or feature requests to 
+
+   https://github.com/langsci/langsci-avm/issues

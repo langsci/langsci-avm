@@ -37,7 +37,7 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-06-24} {0.2.0-rc2}
+  {2020-06-29} {0.2}
   {AVMs and feature structures in LaTeX3}
 \NewDocumentCommand{\avm}{ O{} +m }
   {
@@ -97,8 +97,10 @@
   {
     \tl_put_right:Nn \l__avm_defined_commands_tl
       {
-        \exp_args:Nc
-        \DeclareDocumentCommand { #1 }{ s } { #2 \IfBooleanF { ##1 } { & } \avmsetup{ #3 } }
+        \exp_args:Nc \DeclareDocumentCommand { #1 } { s }
+          {
+             #2 \IfBooleanF { ##1 } { & } \avmsetup{ #3 }
+          }
       }
   }
 
