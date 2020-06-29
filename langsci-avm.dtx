@@ -589,12 +589,14 @@ Please report any bugs or feature requests to
 %    \begin{macro}{\avmdefinecommand}
 % A factory function that creates commands for the layout of sub-structures. The first argument describes the commands name, the second any (optional) label. If a star is used, the lay out command does not advance to the next column, and the last argument gives the style instructions for the following (sub-structures). \cs{cs_set:cpn} ensures that the scope of the manufactured commands will be local to \cs{avm}.
 %    \begin{macrocode}
-\NewDocumentCommand{\avmdefinecommand}{ m o s m }
+\NewDocumentCommand{\avmdefinecommand}{ m O{} m }
   {
     \tl_put_right:Nn \l__avm_defined_commands_tl
       {
-        \cs_set:cpn { #1 } 
-          { #2 \IfBooleanF { #3 } { & } \avmsetup{ #4 } }
+        \exp_args:Nc \DeclareDocumentCommand { #1 } { s } 
+          { 
+             #2 \IfBooleanF { ##1 } { & } \avmsetup{ #3 } 
+          } 
       }
   }
 %    \end{macrocode}

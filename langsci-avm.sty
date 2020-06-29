@@ -93,12 +93,12 @@
       }
   }
 
-\NewDocumentCommand{\avmdefinecommand}{ m o s m }
+\NewDocumentCommand{\avmdefinecommand}{ m O{} m }
   {
     \tl_put_right:Nn \l__avm_defined_commands_tl
       {
-        \cs_set:cpn { #1 }
-          { #2 \IfBooleanF { #3 } { & } \avmsetup{ #4 } }
+        \exp_args:Nc
+        \DeclareDocumentCommand { #1 }{ s } { #2 \IfBooleanF { ##1 } { & } \avmsetup{ #3 } }
       }
   }
 
