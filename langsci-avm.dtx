@@ -11,13 +11,22 @@
 \preamble
 ------------------------------------------------------------------------------
 
-langsci-avm: Attribute-value matrices (AVMs) and feature structures in LaTeX3.
+langsci-avm is aimed at typesetting beautiful feature structures, 
+also known as attribute-value matrices (AVMs), for use in linguistics.
+
+The package provides a minimal and easy to read syntax. 
+It depends only on the array package and can be placed almost everywhere, 
+in particular in footnotes or graphs and tree structures. The package is meant
+as an update to, and serves the same purpose as, Christopher Manning’s 
+avm package, but shares no code base with that package.
+
+langsci-avm was developed at Language Science Press to help in the
+production of scientific texts in linguistics.
 
 Copyright (C) 2020 by Felix Kopecky, Language Science Press
 
-This work consists of the file  langsci-avm.dtx &
-                                include/smallcaps-standalone.pdf.
-          and the derived files langsci-avm.sty, 
+This work consists of the file  langsci-avm.dtx 
+          and the derived files langsci-avm.ins,
                                 langsci-avm.pdf.
                                 
 It may be distributed and/or modified under the conditions of the
@@ -74,25 +83,24 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.2 -- 24th June 2020}
+% \date{Version 0.2 -- 29th June 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
 % \section{Introduction}
 % \pkg{langsci-avm} is a \LaTeX3 package aimed at typesetting beautiful feature structures, also known as \emph{attribute-value matrices}, for use in linguistics. The package provides a minimal and easy to read syntax. It depends only on the \pkg{array} package and can be placed almost everywhere, in particular in footnotes or graphs and tree structures. The package is meant as an update to, and serves the same purpose as, Christopher Manning's \pkg{avm} package, but shares no code base with that package. When you come from \pkg{avm}, please see Section~\ref{sec:switching} for a quick conversion guide.
 %
-% To start using \pkg{langsci-avm}, place |\usepackage{langsci-avm}| in your preamble.
+% To start using \pkg{langsci-avm}, place |\usepackage{langsci-avm}| in your preamble.\\\\
+% \emph{This document is structured as follows:} Section~\ref{sec:basiccommands} describes the input syntax for AVMs and their parts. Ways to customise your AVM's layout follow in Section~\ref{sec:options}, and selected usage cases are presented in Section~\ref{sec:applications}. There's also an administrative and \TeX nical appendix at the end of this document, in case you are interested.
 % 
 % \subsection{Example}
 % \begin{verbatim}
 % \avm{
-% [ ctxt & [ max-qud \\
-%            sal-utt & \{ [  cat \\ 
-%                           cont <ind & i> 
-%                         ]
-%                      \}
-%           ]
-% ]
+%   [ ctxt & [ max-qud \\
+%              sal-utt & \{ [ cat \\ 
+%                             cont <ind & i> ] \}
+%            ]
+%   ]
 % }
 % \end{verbatim}
 % {\centering\avm{
@@ -104,14 +112,16 @@ Please report any bugs or feature requests to
 % \subsection{Acknowledgements}
 % Thanks to Phelype Oleinik for help on recursion and expansion with \LaTeX3. Thanks to Ahmet Bilal Özdemir and Stefan Müller for their contributions in planning and testing this package.
 % 
-% \section{AVM structure}
+% \section{Structuring AVMs}
 % \label{sec:basiccommands}
 % 
 % \begin{function}{\avm}
 %   \begin{syntax}
 %     \cs{avm} \oarg{options} \marg{structure}
 %   \end{syntax}
-%   The heart of this package and its root document comand is |\avm|. In the scope of the command, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. For a description of the \meta{options}, see Section~\ref{sec:options}.
+%   The heart of this package and its root document comand is |\avm|. In the scope of the command, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. Special elements are described in Section~\ref{sec:specialcommands}. For a description of the layout \meta{options}, see Section~\ref{sec:options}.
+% 
+%   A \meta{structure} is basically the content of a stylised \cmd{tabular}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
 % \end{function}
 %  
 % \subsection{Entering (sub-)structures within \texttt{\textbackslash avm}}
@@ -124,9 +134,7 @@ Please report any bugs or feature requests to
 %     \cmd{(} \meta{structure} \cmd{)}
 %     \cmd{\{} \meta{structure} \cmd{\}}
 %   \end{syntax}
-%   Within the scope of \cs{avm}, these delimiters create (sub-)structures that are enclosed by the respective delimiter.  Due to the special meaning that curly braces have in \LaTeX, they are the only ones that need to be run with an escape token (|\|). It is currently possible to mix delimiters, e.g. with |<|\meta{structure}|)|, but this may change in future versions.
-%   
-%   A \meta{structure} is basically the content of a stylised \cmd{tabular}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
+%   Within the scope of \cs{avm}, these delimiters create (sub-)structures that are enclosed by the respective delimiter.  Due to the special meaning that curly braces have in \LaTeX, these are the only ones that need to be run with an escape token (|\|). It is currently possible to mix delimiters, e.g. with |<|\meta{structure}|)|, but this may change in future versions.
 %   
 %   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have at least some lines with a \cmd{&} in your \meta{structure}. Currently, display issues may appear in some structures if none are given.\bigskip\\
 %   \noindent\begin{minipage}[c]{.5\linewidth}
@@ -162,7 +170,7 @@ Please report any bugs or feature requests to
 %   Escapes the |avm| mode so that all delimiters can be used as usual characters. If you need |!| as a regular character, see Section~\ref{sec:options} for how to change the |switch|.
 % \end{function}
 % 
-% \subsection{Commands for tags, types, unusal lines, and relations}
+% \subsection{Commands for tags, types, unusal lines, and relations}\label{sec:specialcommands}
 % \begin{function}[updated=2020-04-29]{\tag,\0,\1,...,\9}
 %   \begin{syntax}
 %    \cs{tag} \marg{identifier}
@@ -188,7 +196,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{type}\meta{*} \marg{type}
 %   \end{syntax}
-%   Will typeset the \meta{type} in the |types| font (roman italics by default). The starred variant \cs{type*} will span the complete (sub-)structure and \emph{can only be placed in the first column} of this structure. After the starred \cs{type*}, a |\\| is recommended, but can be omitted in ``normal'' cases.\bigskip\\   
+%   Will output the \meta{type} in the |types| font (roman italics by default). The starred variant \cs{type*} will span the complete (sub-)structure and \emph{can only be placed in the first column} of this structure. After the starred \cs{type*}, a |\\| is recommended, but can usually be omitted.\bigskip\\   
 %   \noindent\begin{minipage}{.6\linewidth}
 % \begin{verbatim}
 % \avm{[ \type*{A type spanning a line}
@@ -302,14 +310,14 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avmdefinecommand} \marg{name} \oarg{label} \marg{settings}
 %   \end{syntax}
-% Sub-structures often come in patterns. For example, structures often have a \textsc{phon} attribute, which is mapped to a list, the entries of which are in italics. \cs{avmdefinecommand} can account  for this and other input patterns. For example,
+% Sub-structures often come in patterns. For example, AVMs often have a \textsc{phon} attribute, which is mapped to a list, the entries of which are in italics. \cs{avmdefinecommand} can account  for this and other input patterns. For example,
 % 
 % \begin{verbatim}
 % \avmdefinecommand{custom}{...}
 % \end{verbatim}
-% will make a command \cs{custom} available in the scope of \cs{avm}. The \meta{settings} will then be applied to the scope in which \cs{custom} is called. If an optional \meta{label} is given, the label will be printed, in the current font, before the \meta{settings} are applied.
+% will create a command \cs{custom} available only in the scope of \cs{avm} (this means that you can have a different meaning in the rest of your document). The \meta{settings} will then be applied to the scope in which \cs{custom} is called. If an optional \meta{label} is given, the label will be printed, in the current font, before the \meta{settings} are applied.
 % 
-% \cs{custom} generated in this way automatically advances to the value column after the \meta{label} is printed. This means that commands generated with \cs{avmdefinecommand} should be called in the attribute column of an existing structure. This behaviour can be circumvented with the starred variant \cs{name*}, which are automatically generated by \cs{avmdefinecommand} as well. However, it seems advisable to use the starred variants sparingly. 
+% \cs{custom} generated in this way automatically advances to the value column after the \meta{label} is printed. This means that commands generated with \cs{avmdefinecommand} should be called in the attribute column of an existing structure. This behaviour can be circumvented with the starred variant \cs{name*}, which is automatically generated by \cs{avmdefinecommand} as well. However, it seems advisable to use the starred variants sparingly. 
 % 
 % Here's an example for the aforementioned \text{phon} pattern:
 % 
@@ -324,7 +332,7 @@ Please report any bugs or feature requests to
 % 
 % This creates a command \cs{phon} (and the variant \cs{phon*}) within the scope of any \cs{avm}. It will print the label \texttt{phon} in the current font and then apply three settings locally: italics for the attribute (first) column, and two settings for very narrow delimiter fitting. 
 % 
-% This results in (the font of this documentation has little support for IPA):\avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\\\\
+% This results in: (The font of this documentation has little support for IPA.)\avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\\\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
@@ -343,10 +351,10 @@ Please report any bugs or feature requests to
 % }
 % \end{minipage}
 % 
-% Note that any other structure type would have worked instead of \avm{<>}. 
+% Note that any other structure type would have worked instead of \avm{<>}. But \avm{<>} and any other markers for sub-structures are left unchanged by \cs{phon} and other custom commands. This is why the \emph{attribute} font is changed by \cs{phon}, although \emph{lin'gwistiks} is technically a value. Remember that \cmd{<} creates a new list sub-substructure, and the first content is printed in its attribute font.
 % \end{function}
 % 
-% \section{Applications}
+% \section{Applications}\label{sec:applications}
 % 
 % \subsection{Spacing and size of delimiters}\label{sec:spacing}
 % \pkg{langsci-avm} automatically detects if the end of a sub-structure is followed by a line break. This is useful to find cases in which two sub-structures are printed immediately below each other, and to add extra spacing (the |extraskip| from the options). This automatic detection can be suppressed with \cs{relax}. See below for the effect of that detection:\bigskip\\
@@ -428,7 +436,7 @@ Please report any bugs or feature requests to
 % 	attribute3 & value3 ] }
 % \end{minipage}
 % 
-% \subsection{Use as a vector}
+% \pagebreak\subsection{Use as a vector}
 % It's possible to use \pkg{langsci-avm} for feature vectors rather than matrices, as may be useful in generative grammar.\medskip\\
 % \noindent\begin{minipage}[c]{.8\textwidth}
 % \begin{verbatim}
@@ -496,6 +504,29 @@ Please report any bugs or feature requests to
 % 	[A [B] [{\avm{[attr1 & val1\\
 % 			attr2 & val2\\
 % 			attr3 & val3]}} ] ]
+% \end{forest}
+% \end{minipage}
+% 
+% It may happen that extensive AVMs protrude into the space reserved for other \pkg{forest} nodes or edges. In this case, the \pkg{forest} setting \cmd{for children = \{anchor=north\}} may be useful: (If you like, try this tree without that setting.)\bigskip\\
+% \noindent\begin{minipage}[c]{.6\textwidth}
+% \begin{verbatim}
+% \begin{forest}
+%   [A, for children = {anchor=north}
+%      [B] [{\avm{[attr1 & val1\\
+%      attr2 & a long value val2\\
+%      attr3 & val3\\
+%      attr4 & val4\\
+%      attr5 & val5]}} ] 
+%   ]
+% \end{forest}
+% \end{verbatim}
+% \end{minipage}\begin{minipage}[c]{.4\textwidth}
+% \begin{forest}
+% 	[A, for children = {anchor=north} [B] [{\avm{[attr1 & val1\\
+% 			attr2 & a long value val2\\
+%           attr3 & val3\\
+%           attr4 & val4\\
+% 			attr5 & val5]}} ] ]
 % \end{forest}
 % \end{minipage}
 % 
@@ -622,7 +653,7 @@ Please report any bugs or feature requests to
 %    \end{macro}
 
 %    \begin{macro}{\avmdefinecommand}
-% A factory function that creates commands for the layout of sub-structures. The first argument describes the commands name, the second any (optional) label. If a star is used, the lay out command does not advance to the next column, and the last argument gives the style instructions for the following (sub-structures). \cs{cs_set:cpn} ensures that the scope of the manufactured commands will be local to \cs{avm}.
+% A factory function that creates commands for the layout of sub-structures and saves them to \cs{l__avm_defined_commands_tl}. The first argument describes the command's name, the second any (optional) label. The manufactured definitions are activated in the AVM group so that they remain local.
 %    \begin{macrocode}
 \NewDocumentCommand{\avmdefinecommand}{ m O{} m }
   {
