@@ -607,13 +607,13 @@ Please report any bugs or feature requests to
 
 \keys_define:nn { avm }
   {
-    stretch .code:n        = {\def\arraystretch{#1}},
+    stretch .tl_set:N      = \l__avm_arraystretch_tl,
     stretch .initial:n     = {0.9},
-    columnsep .dim_set:N   = \tabcolsep,
+    columnsep .dim_set:N   = \l__avm_tabcolsep_dim,
     columnsep .initial:n   = {.5ex},
-    delimfactor .int_set:N = \delimiterfactor,
+    delimfactor .int_set:N = \l__avm_delimfactor_int,
     delimfactor .initial:n = {1000},
-    delimfall .dim_set:N   = \delimitershortfall,
+    delimfall .dim_set:N   = \l__avm_delimshortfall_dim,
     delimfall .initial:n   = {0pt},
     attributes .code:n     = {\cs_set:Nn \__avm_font_attribute: {#1}},
     attributes .initial:n  = {\scshape},
@@ -826,6 +826,10 @@ Please report any bugs or feature requests to
 
 \cs_new:Nn \__avm_initialise_document_commands: 
   {
+    \def\arraystretch{\tl_use:N \l__avm_arraystretch_tl}
+    \tabcolsep=\l__avm_tabcolsep_dim
+    \delimiterfactor=\l__avm_delimfactor_int
+    \delimitershortfall=\l__avm_delimshortfall_dim
     \cs_if_exist:NTF \tag 
       {  \RenewDocumentCommand{\tag}{m}{ \__avm_controls_tag:n {##1} } }
       {  \NewDocumentCommand{\tag}{m}{   \__avm_controls_tag:n {##1} } }
