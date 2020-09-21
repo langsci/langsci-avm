@@ -46,8 +46,30 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-07-15} {0.2.1}
+  {2020-09-21} {0.3.0-rc1}
   {AVMs and feature structures in LaTeX3}
+\bool_new:N \l__avm_tikz_bool
+\DeclareOption{tikz}{ \bool_set_true:N \l__avm_tikz_bool }
+\ProcessOptions\relax
+\bool_if:NT \l__avm_tikz_bool
+  {
+    \RequirePackage{tikz}
+    \newcounter{l__avm_picture_counter}
+    \NewDocumentEnvironment
+      { avmpicture }
+      { o }
+      {
+        \IfValueTF {#1}
+          {\tl_set:Nn \l__avm_picture_name_prefix_tl {#1}}
+          {\tl_set:Nn \l__avm_picture_name_prefix_tl {\thel__avm_picture_counter}}
+        \begin{tikzpicture}[remember~picture, overlay]
+        \begin{scope}[name~prefix = \tl_use:N \l__avm_picture_name_prefix_tl-]
+      }
+      {
+        \end{scope}
+        \end{tikzpicture}
+      }
+  }
 \NewDocumentCommand{\avm}{ O{} +m }
   {
     \c_group_begin_token
@@ -89,6 +111,8 @@
     extraskip~in~every~row .bool_set:N = \l__avm_extraskip_bool,
     customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
     customise .initial:n   = { },
+    pic .bool_set:N        = \l__avm_picture_bool,
+    pic .default:n         = { true },
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
                            \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},
@@ -305,6 +329,15 @@
         { \__avm_controls_punk:nn {##1}{##2} } }
       {  \NewDocumentCommand{\punk}{m m}
         {  \__avm_controls_punk:nn {##1}{##2} } }
+\bool_if:NT \l__avm_tikz_bool
+      {
+        \stepcounter{l__avm_picture_counter}
+        \DeclareDocumentCommand{\node}{m m}
+          {
+            \tikz [remember~picture,baseline=(\thel__avm_picture_counter-##1.base)]
+            \node [inner~sep=0pt] (\thel__avm_picture_counter-##1) {\strut ##2};
+          }
+      }
   }
 
 \cs_new_protected:Npn \__avm_wrap:n #1

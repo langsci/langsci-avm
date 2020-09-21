@@ -83,7 +83,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.2.2 -- 15th July 2020}
+% \date{Version 0.3.0-rc1 -- 15th July 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -573,8 +573,36 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-09-21} {0.2.2}
+  {2020-09-21} {0.3.0-rc1}
   {AVMs and feature structures in LaTeX3}
+%    \end{macrocode}
+% Let's first check for package options.
+%    \begin{macrocode}
+\bool_new:N \l__avm_tikz_bool
+\DeclareOption{tikz}{ \bool_set_true:N \l__avm_tikz_bool }
+\ProcessOptions\relax
+%    \end{macrocode}
+% Handling for the Ti\emph{k}Z package option.
+%    \begin{macrocode}
+\bool_if:NT \l__avm_tikz_bool 
+  { 
+    \RequirePackage{tikz}
+    \newcounter{l__avm_picture_counter}
+    \NewDocumentEnvironment 
+      { avmpicture } 
+      { o }
+      {
+        \IfValueTF {#1}
+          {\tl_set:Nn \l__avm_picture_name_prefix_tl {#1}}
+          {\tl_set:Nn \l__avm_picture_name_prefix_tl {\thel__avm_picture_counter}}
+        \begin{tikzpicture}[remember~picture, overlay]
+        \begin{scope}[name~prefix = \tl_use:N \l__avm_picture_name_prefix_tl-]
+      } 
+      { 
+        \end{scope}
+        \end{tikzpicture} 
+      }
+  }
 %    \end{macrocode}
 %    \begin{macro}{\avm}
 % This document command initialises an AVM. The first, optional argumet is a key-value list of settings (see \cs{keys_define:nn} below) and the second is the AVM itself, given in the syntax described in this documentation.
@@ -630,6 +658,8 @@ Please report any bugs or feature requests to
     extraskip~in~every~row .bool_set:N = \l__avm_extraskip_bool,
     customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
     customise .initial:n   = { },
+    pic .bool_set:N        = \l__avm_picture_bool,
+    pic .default:n         = { true },
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
     	                      \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},  
@@ -818,7 +848,7 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
 
-%    \begin{macro}[updated=2020-03-30]{\tag,\type,\punk}
+%    \begin{macro}[updated=2020-09-21]{\tag,\type,\punk,\node}
 %    \begin{macrocode}
 \cs_new:Npn \__avm_controls_tag:n #1 
   { \fboxsep.25ex\fbox{\normalfont\__avm_font_tag: #1} } 
@@ -900,6 +930,18 @@ Please report any bugs or feature requests to
         { \__avm_controls_punk:nn {##1}{##2} } }
       {  \NewDocumentCommand{\punk}{m m}
         {  \__avm_controls_punk:nn {##1}{##2} } }
+%    \end{macrocode}
+% The last of the bunch is only loaded if Ti\emph{k}Z is loaded as well:
+%    \begin{macrocode}
+\bool_if:NT \l__avm_tikz_bool 
+      {
+        \stepcounter{l__avm_picture_counter}
+        \DeclareDocumentCommand{\node}{m m}
+          { 
+            \tikz [remember~picture,baseline=(\thel__avm_picture_counter-##1.base)] 
+            \node [inner~sep=0pt] (\thel__avm_picture_counter-##1) {\strut ##2}; 
+          }
+      }
   }
 %    \end{macrocode}
 %    \end{macro}
