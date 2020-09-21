@@ -80,14 +80,13 @@
     values .initial:n      = {\itshape},
     tags .code:n           = {\cs_set:Nn \__avm_font_tag: {#1}},
     tags .initial:n        = {\footnotesize},
-    apptovalues .code:n    = {\cs_set:Nn \__avm_deinit_second_column: {#1}},
-    apptovalues .initial:n = {\/},
     singleton .code:n      = {\cs_set:Nn \__avm_font_singleton: {#1}},
     singleton .initial:n   = {\normalfont},
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
     switch .initial:n      = { ! },
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
     extraskip .initial:n   = {\smallskipamount},
+    extraskip~in~every~row .bool_set:N = \l__avm_extraskip_bool,
     customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
     customise .initial:n   = { },
     style .choice:,
@@ -134,6 +133,19 @@
     \normalfont\__avm_font_value:
   }
 
+
+\tl_const:Nn \l__avm_italics_tl {it}
+
+\cs_new:Nn \__avm_deinit_first_column:
+  {
+    \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/}
+  }
+
+\cs_new:Nn \__avm_deinit_second_column:
+  {
+    \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/}
+  }
+
 \cs_new:Nn \__avm_kern_unused_columns:
   {
     \bool_if:NTF \l__avm_in_first_column
@@ -150,6 +162,7 @@
   {
     \begin{tabular}{@{}
                     >{\__avm_init_first_column:}l
+                    <{\__avm_deinit_first_column:}
                     >{\__avm_init_second_column:}l
                     <{\__avm_deinit_second_column:}
                     @{}}

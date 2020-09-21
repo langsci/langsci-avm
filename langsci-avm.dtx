@@ -83,7 +83,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.2.1 -- 15th July 2020}
+% \date{Version 0.2.2 -- 15th July 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -295,8 +295,6 @@ Please report any bugs or feature requests to
 %   \item[|attributes =| \meta{font settings} \hfill (initially |\textbackslash scshape|)] The font for attributes, i.e. the first column of each structure.
 %   
 %   \item[|values =| \meta{font settings} \hfill (initially |\textbackslash itshape|)] The font for values, i.e. the second column of each structure.
-% 
-%   \item[|apptovalues=| \meta{code} \hfill (initially \cs{/})] The \meta{code} is applied after the second column (``append to''). This is useful if |values| is set to |\itshape|, since \cs{itshape} does not automatically insert italic correction.
 %   
 %   \item[|types =| \meta{font settings} \hfill (initially |\textbackslash itshape|)] The font used in \cs{type} and \cs{type*}.
 %   \item[|tags =| \meta{format settings} \hfill (initially |\textbackslash footnotesize|)] The font (size) used in \cs{tag} and the shortcuts \cs{1}...\cs{9}.
@@ -575,7 +573,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-07-15} {0.2.1}
+  {2020-09-21} {0.2.2}
   {AVMs and feature structures in LaTeX3}
 %    \end{macrocode}
 %    \begin{macro}{\avm}
@@ -623,14 +621,13 @@ Please report any bugs or feature requests to
     values .initial:n      = {\itshape},
     tags .code:n           = {\cs_set:Nn \__avm_font_tag: {#1}},
     tags .initial:n        = {\footnotesize},
-    apptovalues .code:n    = {\cs_set:Nn \__avm_deinit_second_column: {#1}},
-    apptovalues .initial:n = {\/},
     singleton .code:n      = {\cs_set:Nn \__avm_font_singleton: {#1}},
     singleton .initial:n   = {\normalfont},    
     switch .code:n         = {\tl_set:Nn \__avm_mode_switch_character {#1}},
     switch .initial:n      = { ! },
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
     extraskip .initial:n   = {\smallskipamount},
+    extraskip~in~every~row .bool_set:N = \l__avm_extraskip_bool,
     customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
     customise .initial:n   = { },
     style .choice:,
@@ -709,6 +706,24 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
 
+%    \begin{macro}[int,added=2020-09-21]{\__avm_deinit_first_column:, \__avm_deinit_second_column:}
+% These commands control settings that are applied after each column is exited. The single check here is whether italics is currently in use. If it is, the the italic correction is automatically applied. This replaces the user-configurable setting |apptovalues| from previous versions.
+%    \begin{macrocode}
+
+\tl_const:Nn \l__avm_italics_tl {it}
+
+\cs_new:Nn \__avm_deinit_first_column:
+  {
+    \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/} 
+  }
+
+\cs_new:Nn \__avm_deinit_second_column:
+  {
+    \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/}
+  }
+%    \end{macrocode}
+%    \end{macro}
+
 %    \begin{macro}[int]{\__avm_kern_unused_columns:}
 % A helper macro to fill the horizontal space if a row is ended prematurely, i.e. if no \cmd{&} is present.
 %    \begin{macrocode}
@@ -737,7 +752,8 @@ Please report any bugs or feature requests to
 \cs_new:Nn \__avm_module_begin: 
   { 
     \begin{tabular}{@{} 
-                    >{\__avm_init_first_column:}l 
+                    >{\__avm_init_first_column:}l
+                    <{\__avm_deinit_first_column:}
                     >{\__avm_init_second_column:}l 
                     <{\__avm_deinit_second_column:}
                     @{}}
