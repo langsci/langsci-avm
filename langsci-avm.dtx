@@ -71,7 +71,9 @@ Please report any bugs or feature requests to
 %<*driver>
 \documentclass{l3doc}
 \usepackage[linguistics]{forest}
-\usepackage{langsci-avm,enumitem,url,gb4e}
+\usepackage[tikz]{langsci-avm}
+\usetikzlibrary{arrows, arrows.meta}
+\usepackage{enumitem,url,gb4e}
 \setlist[description]{font=\normalfont}
 \begin{document}
   \DocInput{\jobname.dtx}
@@ -302,6 +304,63 @@ Please report any bugs or feature requests to
 %   \item[|customise = | \meta{settings} \hfill (initially empty)] An interface to input custom commands to be run at the beginning of every \cs{avm}.
 %   \end{description}
 % 
+% \subsection{Drawing edges between AVM contents}
+% It is possible to make AVM contents available to \pkg{tikz}, so that they can be referenced in a \cmd{tikzpicture}. To enable this feature, \pkg{langsci-avm} has to be loaded with the option |[tikz]|:
+% 
+% \begin{verbatim}
+% \usepackage[tikz]{langsci-avm}
+% \end{verbatim}
+% Additionaly, \cmd{avm} environments on which \pkg{tikz} is to be used need to have the |[pic]| option present:
+% 
+% \begin{verbatim}
+% \avm[pic] {...}
+% \end{verbatim}
+% 
+% Only the parts of an AVM that are specifically marked will be known to \pkg{tikz}. To mark a part of an AVM to be used by Ti\emph{k}Z, use \cs{node}:
+% 
+% \begin{function}[added=2020-09-23]{\node}
+%   \begin{syntax}
+%     \cs{node} \marg{id} \marg{contents}
+%   \end{syntax}
+%   \marg{id} serves as part of the node's identifier in a \cmd{tikzpicture}. It will be prefixed, and it's complete name will be |avm-n-\marg{id}|, where |n| is the counter of \cs{avm} in your document that have the |[pic]| option enabled and that don't have a |picname| (see below). |n| starts at 1. For example, a \cs{node} named ``pretty-node'' in the fourth |[pic]|-enabled \cmd{avm} in your document will be |avm-4-pretty-node|. Note that \cs{node} will register the complete name globally in your document, and so can't be declared by other \pkg{tikz} nodes.
+% 
+% This behaviour can be adjusted by passing a |[picname = |\meta{avm's name}|]| to \cs{avm}. E.g., \cs{node}s within |\avm[pic, picname = example1]| will have a full name pattern of |example1-|\meta{id}. Named \cs{avm}s do \emph{not} raise the |n| mentioned in the last paragraph.
+% 
+% Any proper part of an AVM can be referenced in \marg{contents}. It could be just a value, an attribute's name, or part of either, but whole (sub-)structures can be part of \marg{contents} as well.
+% \end{function}
+% 
+% A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:
+% 
+% \begin{center}
+% \avm[pic, picname=example1]{[ subj  & \1\\
+% 	comps &  <\node{gap}{gap-ss}> \bigskip\\
+% 	\node{phon}{phon} &   <\1 \+ \2>
+% 	]}
+% 
+% \begin{tikzpicture}[remember picture,overlay]
+% 	\path[{Stealth[]}-{Stealth[]},gray,dashed,in=90,out=270] 
+% 	(example1-gap.south) edge (example1-phon.north);
+% \end{tikzpicture}
+% \end{center}
+% 
+% \begin{verbatim}
+% \documentclass{article}
+% \usepackage[tikz]{langsci-avm}
+% \usepackage{tikz} % optional, since langsci-avm will load tikz if option 
+%                   % tikz is present
+% \usetikzlibrary{arrows,arrows.meta}
+% 
+% \avm[pic]{[ subj  & \1\\
+% 	comps &  <\node{gap}{gap-ss}> \bigskip\\
+% 	\node{phon}{phon} &   <\1 \+ \2>
+% 	]}
+% 
+% \begin{tikzpicture}[remember picture,overlay]
+% 	\path[{Stealth[]}-{Stealth[]},gray,dashed,in=90,out=270] 
+% 	(avm-1-gap.south) edge (avm-1-phon.north);
+% \end{tikzpicture} 
+% \end{verbatim}
+% 
 % \subsection{Defining input patterns}
 % 
 % \begin{function}[added=2020-06-29]{\avmdefinecommand}
@@ -330,7 +389,7 @@ Please report any bugs or feature requests to
 % 
 % This creates a command \cs{phon} (and the variant \cs{phon*}) within the scope of any \cs{avm}. It will print the label \texttt{phon} in the current font and then apply three settings locally: italics for the attribute (first) column, and two settings for very narrow delimiter fitting. 
 % 
-% This results in: (The font of this documentation has little support for IPA.)\avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\\\\
+% This results in: (The font of this documentation has little support for IPA.)\avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\bigskip\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
@@ -347,7 +406,7 @@ Please report any bugs or feature requests to
 %    synsem & [ ... ]
 %   ]
 % }
-% \end{minipage}
+% \end{minipage}\bigskip
 % 
 % Note that any other structure type would have worked instead of \avm{<>}. But \avm{<>} and any other markers for sub-structures are left unchanged by \cs{phon} and other custom commands. This is why the \emph{attribute} font is changed by \cs{phon}, although \emph{lin'gwistiks} is technically a value. Remember that \cmd{<} creates a new list sub-substructure, and the first content is printed in its attribute font.
 % \end{function}
@@ -384,7 +443,7 @@ Please report any bugs or feature requests to
 %        [attr1 & val1 \\ 
 %         attr2 & val2 ]
 %      ]}
-% \end{minipage}\\\\
+% \end{minipage}\medskip
 % 
 % If many delimiters are nested, this occasionally results in larger delimiter sizes. There is a pre-defined |narrow| style that resets |delimfall| (to |5pt|) and |delimfactor| (to |997|), which are  the values recommended in the \textit{\TeX book}. This results in a more compact appearance:\bigskip\\ 
 % \noindent\begin{minipage}[t]{.5\textwidth}\centering
@@ -931,7 +990,7 @@ Please report any bugs or feature requests to
           {
             \stepcounter{l__avm_picture_counter}  
             \tl_set:Nn \l__avm_picture_name_prefix_tl 
-              {  avm-\tl_use:N \thel__avm_picture_counter } 
+              {avm-\tl_use:N \thel__avm_picture_counter} 
           }
           {
             \tl_set_eq:NN \l__avm_picture_name_prefix_tl \l__avm_picture_name_tl           
