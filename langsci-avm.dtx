@@ -83,7 +83,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc1 -- 15th July 2020}
+% \date{Version 0.3.0-rc1 -- 23 September 2020}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -588,20 +588,7 @@ Please report any bugs or feature requests to
   { 
     \RequirePackage{tikz}
     \newcounter{l__avm_picture_counter}
-    \NewDocumentEnvironment 
-      { avmpicture } 
-      { o }
-      {
-        \IfValueTF {#1}
-          {\tl_set:Nn \l__avm_picture_name_prefix_tl {#1}}
-          {\tl_set:Nn \l__avm_picture_name_prefix_tl {\thel__avm_picture_counter}}
-        \begin{tikzpicture}[remember~picture, overlay]
-        \begin{scope}[name~prefix = \tl_use:N \l__avm_picture_name_prefix_tl-]
-      } 
-      { 
-        \end{scope}
-        \end{tikzpicture} 
-      }
+    \tl_new:N \l__avm_picture_name_prefix_tl
   }
 %    \end{macrocode}
 %    \begin{macro}{\avm}
@@ -660,6 +647,8 @@ Please report any bugs or feature requests to
     customise .initial:n   = { },
     pic .bool_set:N        = \l__avm_picture_bool,
     pic .default:n         = { true },
+    picname .tl_set:N      = \l__avm_picture_name_tl,
+    picname .initial:n	   = {automatic},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
     	                      \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},  
@@ -705,10 +694,13 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{variable}
 
-%    \begin{macro}[int]{\seq_set_split:NVn}
+%    \begin{macro}[int]{\seq_set_split:NVn, \tl_if_eq:VnTF}
 % In preparation for \cs{avm_wrap:n}, we need to split the user input at each occurrence of the escape character. Since the character is given in a variable, we need a variant of the sequence splitter that takes the \emph{evaluation} of the variable, rather than the variable itself, as its second argument.
+% 
+% The second variant is useful for comparing the values of token list variables with token lists.
 %    \begin{macrocode}
 \cs_generate_variant:Nn \seq_set_split:Nnn { NVn }
+\cs_generate_variant:Nn \tl_if_eq:nnTF {VnTF}
 %    \end{macrocode}
 %    \end{macro}
 
@@ -935,11 +927,19 @@ Please report any bugs or feature requests to
 %    \begin{macrocode}
 \bool_if:NT \l__avm_tikz_bool 
       {
-        \stepcounter{l__avm_picture_counter}
+        \tl_if_eq:VnTF \l__avm_picture_name_tl {automatic}
+          {
+            \stepcounter{l__avm_picture_counter}  
+            \tl_set:Nn \l__avm_picture_name_prefix_tl 
+              {  avm-\tl_use:N \thel__avm_picture_counter } 
+          }
+          {
+            \tl_set_eq:NN \l__avm_picture_name_prefix_tl \l__avm_picture_name_tl           
+          }
         \DeclareDocumentCommand{\node}{m m}
           { 
-            \tikz [remember~picture,baseline=(\thel__avm_picture_counter-##1.base)] 
-            \node [inner~sep=0pt] (\thel__avm_picture_counter-##1) {\strut ##2}; 
+            \tikz [remember~picture,baseline=(\l__avm_picture_name_prefix_tl-##1.base)] 
+            \node [inner~sep=0pt] (\l__avm_picture_name_prefix_tl-##1) {\strut ##2}; 
           }
       }
   }

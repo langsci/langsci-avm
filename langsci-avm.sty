@@ -55,20 +55,7 @@
   {
     \RequirePackage{tikz}
     \newcounter{l__avm_picture_counter}
-    \NewDocumentEnvironment
-      { avmpicture }
-      { o }
-      {
-        \IfValueTF {#1}
-          {\tl_set:Nn \l__avm_picture_name_prefix_tl {#1}}
-          {\tl_set:Nn \l__avm_picture_name_prefix_tl {\thel__avm_picture_counter}}
-        \begin{tikzpicture}[remember~picture, overlay]
-        \begin{scope}[name~prefix = \tl_use:N \l__avm_picture_name_prefix_tl-]
-      }
-      {
-        \end{scope}
-        \end{tikzpicture}
-      }
+    \tl_new:N \l__avm_picture_name_prefix_tl
   }
 \NewDocumentCommand{\avm}{ O{} +m }
   {
@@ -113,6 +100,8 @@
     customise .initial:n   = { },
     pic .bool_set:N        = \l__avm_picture_bool,
     pic .default:n         = { true },
+    picname .tl_set:N      = \l__avm_picture_name_tl,
+    picname .initial:n    = {automatic},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
                            \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},
@@ -142,6 +131,7 @@
 \tl_new:N \l__avm_defined_commands_tl
 
 \cs_generate_variant:Nn \seq_set_split:Nnn { NVn }
+\cs_generate_variant:Nn \tl_if_eq:nnTF {VnTF}
 
 \bool_new:N \l__avm_in_first_column
 
@@ -331,11 +321,19 @@
         {  \__avm_controls_punk:nn {##1}{##2} } }
 \bool_if:NT \l__avm_tikz_bool
       {
-        \stepcounter{l__avm_picture_counter}
+        \tl_if_eq:VnTF \l__avm_picture_name_tl {automatic}
+          {
+            \stepcounter{l__avm_picture_counter}
+            \tl_set:Nn \l__avm_picture_name_prefix_tl
+              {  avm-\tl_use:N \thel__avm_picture_counter }
+          }
+          {
+            \tl_set_eq:NN \l__avm_picture_name_prefix_tl \l__avm_picture_name_tl
+          }
         \DeclareDocumentCommand{\node}{m m}
           {
-            \tikz [remember~picture,baseline=(\thel__avm_picture_counter-##1.base)]
-            \node [inner~sep=0pt] (\thel__avm_picture_counter-##1) {\strut ##2};
+            \tikz [remember~picture,baseline=(\l__avm_picture_name_prefix_tl-##1.base)]
+            \node [inner~sep=0pt] (\l__avm_picture_name_prefix_tl-##1) {\strut ##2};
           }
       }
   }
