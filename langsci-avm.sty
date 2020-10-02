@@ -46,16 +46,22 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-09-21} {0.3.0-rc1}
+  {2020-10-02} {0.3.0-rc2}
   {AVMs and feature structures in LaTeX3}
+\bool_new:N \l__avm_lfg_bool
 \bool_new:N \l__avm_tikz_bool
 \DeclareOption{tikz}{ \bool_set_true:N \l__avm_tikz_bool }
+\DeclareOption{lfg}{ \bool_set_true:N \l__avm_lfg_bool }
 \ProcessOptions\relax
 \bool_if:NT \l__avm_tikz_bool
   {
     \RequirePackage{tikz}
     \newcounter{l__avm_picture_counter}
     \tl_new:N \l__avm_picture_name_prefix_tl
+  }
+\bool_if:NT \l__avm_lfg_bool
+  {
+    \RequirePackage
   }
 \NewDocumentCommand{\avm}{ O{} +m }
   {
@@ -319,7 +325,17 @@
         { \__avm_controls_punk:nn {##1}{##2} } }
       {  \NewDocumentCommand{\punk}{m m}
         {  \__avm_controls_punk:nn {##1}{##2} } }
-\bool_if:NT \l__avm_tikz_bool
+    \DeclareDocumentCommand{\id}{m m}
+      {%
+        \hcoffin_set:Nw \l_tmpa_coffin
+          \begin{tabular}{@{}>{\footnotesize}l@{}} ##1 \end{tabular}
+          \hcoffin_set_end:
+        \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
+        \coffin_attach:NnnNnnnn \l_tmpb_coffin {l}{H}
+          \l_tmpa_coffin {r}{b}{0pt}{ -\coffin_dp:N \l_tmpb_coffin }
+        \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
+      }
+    \bool_if:NT \l__avm_tikz_bool
       {
         \tl_if_eq:VnTF \l__avm_picture_name_tl {automatic}
           {
