@@ -71,7 +71,7 @@ Please report any bugs or feature requests to
 %<*driver>
 \documentclass{l3doc}
 \usepackage[linguistics]{forest}
-\usepackage[tikz]{langsci-avm}
+\usepackage[lfg,tikz]{langsci-avm}
 \usetikzlibrary{arrows, arrows.meta}
 \usepackage{enumitem,url,gb4e}
 \setlist[description]{font=\normalfont}
@@ -129,12 +129,13 @@ Please report any bugs or feature requests to
 % \subsection{Entering (sub-)structures within \texttt{\textbackslash avm}}
 % \label{sec:commands}
 % 
-% \begin{function}{[...],<...>,(...),\{...\}}
+% \begin{function}[updated=2020-10-02]{[...],<...>,(...),\{...\},\[...\]}
 % \begin{syntax}
 %     \cmd{[} \meta{structure} \cmd{]}
 %     \cmd{<} \meta{structure} \cmd{>}
 %     \cmd{(} \meta{structure} \cmd{)}
 %     \cmd{\{} \meta{structure} \cmd{\}}
+%     \cmd{\[} \meta{structure} \cmd{\]}
 %   \end{syntax}
 %   Within the scope of \cs{avm}, these delimiters create (sub-)structures that are enclosed by the respective delimiter.  Due to the special meaning that curly braces have in \LaTeX, these are the only ones that need to be run with an escape token (|\|). It is currently possible to mix delimiters, e.g. with |<|\meta{structure}|)|, but this may change in future versions.
 %   
@@ -142,27 +143,28 @@ Please report any bugs or feature requests to
 %   \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
-%   [ < ( \{ ... \} ) > ]
+%   \[ [ < ( \{ ... \} ) > ] \]
 % }
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\linewidth}
 % \avm{
-%   [ < ( \{ ... \} ) > ]
+%   \[ [ < ( \{ ... \} ) > ] \]
 % }
 % \end{minipage}\bigskip\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
-%   [ \{ ... \} \\
-%   < ( ... ), ( ... ) > ]
+%   \[ [ \{ ... \} \\
+%   < ( ... ), ( ... ) > ] \]
 % }
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\linewidth}
 % \avm{
-%   [ \{ ... \} \\
-%   < ( ... ), ( ... ) > ]
+%   \[ [ \{ ... \} \\
+%   < ( ... ), ( ... ) > ] \]
 % }
-% \end{minipage}
+% \end{minipage}\bigskip\\
+% \emph{Warning:} The semantic bracket \avm{\[...\]} is only available when the package option |[lfg]| is loaded, i.e. |\usepackage[lfg]{langsci-avm}|. This is because the semantic delimiters are not available in every font, and are currently not provided in standard \LaTeX\ documents. If you load the |[lfg]| option but do not provide the symbol (e.g. by using a font such as \pkg{libertinus}), the package \pkg{unicode-math} will automatically be loaded to provide the symbol. If the |[lfg]| option is not present, \cmd{\[} \marg{structure} \cmd{\]} will result in none delimiter output, but the \marg{structure} will be printed nonetheless.
 % \end{function}
 % 
 % \begin{function}{!...!}
@@ -648,6 +650,13 @@ Please report any bugs or feature requests to
 \ProvidesExplPackage {langsci-avm} 
   {2020-10-02} {0.3.0-rc2}
   {AVMs and feature structures in LaTeX3}
+  
+\msg_new:nnnn {avm} {lfgoptionmissing}
+  {  Missing~package~option~lfg~at~line~\msg_line_number:  }
+  {
+    You~issued~a~command~in~line~\msg_line_number:~that~is~only~available~when~
+    the~lfg~package~option~is~enabled.
+  }
 %    \end{macrocode}
 % Let's first check for package options.
 %    \begin{macrocode}
@@ -666,11 +675,15 @@ Please report any bugs or feature requests to
     \tl_new:N \l__avm_picture_name_prefix_tl
   }
 %    \end{macrocode}
-% Handling for the LFG package option.
+% Handling for the LFG package option: If the semantic bracket is not available at the end of the preamble (i.e.) it was not loaded by another package, load \pkg{unicode-math} to provide the symbol.
 %    \begin{macrocode}
 \bool_if:NT \l__avm_lfg_bool
   {
-    \RequirePackage
+    \cs_if_exist:NF \lBrack
+      {
+        \RequirePackage{etoolbox}
+        \AtEndPreamble { \RequirePackage{unicode-math} }
+      }
   }
 %    \end{macrocode}
 %    \begin{macro}{\avm}
@@ -886,6 +899,37 @@ Please report any bugs or feature requests to
   { 
     \__avm_parse_output:nw 
       {  \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip:  } 
+  }
+\bool_if:NTF \l__avm_lfg_bool
+  {
+    \cs_new:Nn \__avm_replace_llbrack: 
+      { 
+        \__avm_parse_output:nw 
+          {  \c_math_toggle_token\left\lBrack\__avm_module_begin:  } 
+      }     
+    \cs_new:Nn \__avm_replace_rrbrack: 
+      { 
+        \__avm_parse_output:nw 
+          {  \__avm_module_end:\right\rBrack\c_math_toggle_token\__avm_extra_skip:  } 
+      }
+  }
+  {
+    \cs_new:Nn \__avm_replace_llbrack: 
+      { 
+        \__avm_parse_output:nw 
+          {  
+            \msg_warning:nn {avm}{lfgoptionmissing}
+            \c_math_toggle_token\left.\__avm_module_begin:  
+          } 
+      }     
+    \cs_new:Nn \__avm_replace_rrbrack: 
+      { 
+        \__avm_parse_output:nw 
+          {  
+            \msg_warning:nn {avm}{lfgoptionmissing}
+            \__avm_module_end:\right.\c_math_toggle_token\__avm_extra_skip:  
+          } 
+      }  
   }
 \cs_new:Nn \__avm_replace_lparen:
   {    
@@ -1109,6 +1153,8 @@ Please report any bugs or feature requests to
         { \shuffle }{ \__avm_replace_circle: }
         { [  }{ \__avm_replace_lbrack: }
         { ]  }{ \__avm_replace_rbrack: }
+        { \[ }{ \__avm_replace_llbrack: }
+        { \] }{ \__avm_replace_rrbrack: }
         { (  }{ \__avm_replace_lparen: }
         { )  }{ \__avm_replace_rparen: }
         { \{ }{ \__avm_replace_lbrace: }        

@@ -48,6 +48,13 @@
 \ProvidesExplPackage {langsci-avm}
   {2020-10-02} {0.3.0-rc2}
   {AVMs and feature structures in LaTeX3}
+
+\msg_new:nnnn {avm} {lfgoptionmissing}
+  {  Missing~package~option~lfg~at~line~\msg_line_number:  }
+  {
+    You~issued~a~command~in~line~\msg_line_number:~that~is~only~available~when~
+    the~lfg~package~option~is~enabled.
+  }
 \bool_new:N \l__avm_lfg_bool
 \bool_new:N \l__avm_tikz_bool
 \DeclareOption{tikz}{ \bool_set_true:N \l__avm_tikz_bool }
@@ -61,7 +68,11 @@
   }
 \bool_if:NT \l__avm_lfg_bool
   {
-    \RequirePackage
+    \cs_if_exist:NF \lBrack
+      {
+        \RequirePackage{etoolbox}
+        \AtEndPreamble { \RequirePackage{unicode-math} }
+      }
   }
 \NewDocumentCommand{\avm}{ O{} +m }
   {
@@ -211,6 +222,37 @@
   {
     \__avm_parse_output:nw
       {  \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip:  }
+  }
+\bool_if:NTF \l__avm_lfg_bool
+  {
+    \cs_new:Nn \__avm_replace_llbrack:
+      {
+        \__avm_parse_output:nw
+          {  \c_math_toggle_token\left\lBrack\__avm_module_begin:  }
+      }
+    \cs_new:Nn \__avm_replace_rrbrack:
+      {
+        \__avm_parse_output:nw
+          {  \__avm_module_end:\right\rBrack\c_math_toggle_token\__avm_extra_skip:  }
+      }
+  }
+  {
+    \cs_new:Nn \__avm_replace_llbrack:
+      {
+        \__avm_parse_output:nw
+          {
+            \msg_warning:nn {avm}{lfgoptionmissing}
+            \c_math_toggle_token\left.\__avm_module_begin:
+          }
+      }
+    \cs_new:Nn \__avm_replace_rrbrack:
+      {
+        \__avm_parse_output:nw
+          {
+            \msg_warning:nn {avm}{lfgoptionmissing}
+            \__avm_module_end:\right.\c_math_toggle_token\__avm_extra_skip:
+          }
+      }
   }
 \cs_new:Nn \__avm_replace_lparen:
   {
@@ -417,6 +459,8 @@
         { \shuffle }{ \__avm_replace_circle: }
         { [  }{ \__avm_replace_lbrack: }
         { ]  }{ \__avm_replace_rbrack: }
+        { \[ }{ \__avm_replace_llbrack: }
+        { \] }{ \__avm_replace_rrbrack: }
         { (  }{ \__avm_replace_lparen: }
         { )  }{ \__avm_replace_rparen: }
         { \{ }{ \__avm_replace_lbrace: }
