@@ -46,7 +46,7 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-10-02} {0.3.0-rc2}
+  {2020-10-12} {0.3.0-rc3}
   {AVMs and feature structures in LaTeX3}
 
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -370,11 +370,19 @@
     \DeclareDocumentCommand{\id}{m m}
       {%
         \hcoffin_set:Nw \l_tmpa_coffin
-          \begin{tabular}{@{}>{\footnotesize}l@{}} ##1 \end{tabular}
+          $\vcenter\bgroup\let\\\cr
+          \baselineskip\fontdimen10 \scriptfont2
+          \advance\baselineskip\fontdimen12 \scriptfont2
+          \lineskip3\fontdimen8 \scriptfont3
+          \lineskiplimit\lineskip
+          \ialign\bgroup
+          $\m@th\scriptstyle####$\hfil\crcr
+          ##1
+          \crcr\egroup\egroup$
           \hcoffin_set_end:
         \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
-        \coffin_attach:NnnNnnnn \l_tmpb_coffin {l}{H}
-          \l_tmpa_coffin {r}{b}{0pt}{ -\coffin_dp:N \l_tmpb_coffin }
+        \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
+          \l_tmpa_coffin {r}{b}{1ex}{ -\coffin_dp:N \l_tmpb_coffin }
         \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
       }
     \bool_if:NT \l__avm_tikz_bool
