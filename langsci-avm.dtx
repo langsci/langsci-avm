@@ -1050,20 +1050,17 @@ Please report any bugs or feature requests to
         {  \__avm_controls_punk:nn {##1}{##2} } }
     \DeclareDocumentCommand{\id}{m m}
       {%
-        \hcoffin_set:Nw \l_tmpa_coffin 
-          $\vcenter\bgroup\let\\\cr
-          \baselineskip\fontdimen10 \scriptfont2
-          \advance\baselineskip\fontdimen12 \scriptfont2
-          \lineskip3\fontdimen8 \scriptfont3
-          \lineskiplimit\lineskip
-          \ialign\bgroup
-          $\m@th\scriptstyle####$\hfil\crcr
+        \hcoffin_set:Nw \l_tmpa_coffin
+          \bgroup
+          \def\arraystretch{.5}
+          \begin{tabular}[b]{@{}>{$\scriptstyle}l<{$}@{}}
           ##1
-          \crcr\egroup\egroup$
+          \end{tabular}
+          \egroup
           \hcoffin_set_end:
         \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
         \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
-          \l_tmpa_coffin {r}{b}{1ex}{ -\coffin_dp:N \l_tmpb_coffin }
+          \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
         \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
       }
 %    \end{macrocode}
