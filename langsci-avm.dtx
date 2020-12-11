@@ -214,17 +214,17 @@ Please report any bugs or feature requests to
 %   \end{minipage}
 % \end{function}
 % 
-% \begin{function}[added=2020-10-02,updated=2020-10-12]{\id} 
+% \begin{function}[added=2020-10-02,updated=2020-12-11]{\id} 
 %   \begin{syntax}
 %     \cs{id} \marg{id} \marg{structure}
 %   \end{syntax}
-%   A variant of \cs{substack} from \pkg{amsmath}, this command adds an identifier to the \marg{structure}. The contents of \marg{id} will be set in math mode by default, which is convenient given that they often contain variables with subscript indices.  Multiple IDs should be separated by a new line, |\\|.\bigskip\\   
+%   A variant of \cs{substack} from \pkg{amsmath}, this command adds an identifier to the \marg{structure}. The contents of \marg{id} will be set in math mode by default, which is convenient given that they often contain variables with subscript indices.  Multiple IDs should be separated by a new line, |\\|. The alignment of the id column can be changed with the key \cmd{id align}, see Section~\ref{sec:options}.\bigskip\\   
 %   \noindent\begin{minipage}{.75\linewidth}
 % \begin{verbatim}
-% \avm{ \id{n_1\\n_2}{ [subj\\pred&swim] }}
+% \avm{ \id{n_1\\n_2}{[subj\\pred&swim]}}
 % \end{verbatim}
 %   \end{minipage}\begin{minipage}{.25\linewidth}
-% \avm{ \id{n_1\\n_2}{ [subj\\pred&swim] }}
+% \avm{ \id{n_1\\n_2}{[subj\\pred&swim]}}
 %   \end{minipage}
 % \end{function}
 % 
@@ -317,6 +317,7 @@ Please report any bugs or feature requests to
 %   \item[|types =| \meta{font settings} \hfill (initially |\textbackslash itshape|)] The font used in \cs{type} and \cs{type*}.
 %   \item[|tags =| \meta{format settings} \hfill (initially |\textbackslash footnotesize|)] The font (size) used in \cs{tag} and the shortcuts \cs{1}...\cs{9}.
 %   \item[|switch =| \meta{token} \hfill (initially |!|)] Define the escape token. Change this if you need to use ``!'' as a text glyph.
+%   \item[|id align =| \meta{token} \hfill (initially |l|)] Change the alignment of the column inserted by \cs{id}. Has to be a column specification. The most probable choices are \cmd{l} and \cmd{r}.
 %   \item[|customise = | \meta{settings} \hfill (initially empty)] An interface to input custom commands to be run at the beginning of every \cs{avm}.
 %   \end{description}
 % 
@@ -744,6 +745,8 @@ Please report any bugs or feature requests to
     pic .default:n         = { true },
     picname .tl_set:N      = \l__avm_picture_name_tl,
     picname .initial:n	   = {automatic},
+    id~align .code:n       = { \newcolumntype{i}{#1} },
+    id~align .initial:n	   = {l},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
     	                      \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},  
@@ -1053,7 +1056,7 @@ Please report any bugs or feature requests to
         \hcoffin_set:Nw \l_tmpa_coffin
           \bgroup
           \def\arraystretch{.5}
-          \begin{tabular}[b]{@{}>{$\scriptstyle}l<{$}@{}}
+          \begin{tabular}[b]{@{}>{$\scriptstyle}i<{$}@{}}
           ##1
           \end{tabular}
           \egroup

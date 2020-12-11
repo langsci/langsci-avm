@@ -119,6 +119,8 @@
     pic .default:n         = { true },
     picname .tl_set:N      = \l__avm_picture_name_tl,
     picname .initial:n    = {automatic},
+    id~align .code:n       = { \newcolumntype{i}{#1} },
+    id~align .initial:n    = {l},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
                            \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},
@@ -372,7 +374,7 @@
         \hcoffin_set:Nw \l_tmpa_coffin
           \bgroup
           \def\arraystretch{.5}
-          \begin{tabular}[b]{@{}>{$\scriptstyle}l<{$}@{}}
+          \begin{tabular}[b]{@{}>{$\scriptstyle}i<{$}@{}}
           ##1
           \end{tabular}
           \egroup
