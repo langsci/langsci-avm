@@ -25,9 +25,8 @@ production of scientific texts in linguistics.
 
 Copyright (C) 2020 by Felix Kopecky, Language Science Press
 
-This work consists of the file  langsci-avm.dtx 
-          and the derived files langsci-avm.ins,
-                                langsci-avm.pdf.
+This work consists of the file langsci-avm.dtx 
+          and the derived file langsci-avm.pdf.
                                 
 It may be distributed and/or modified under the conditions of the
 LaTeX Project Public License (LPPL), either version 1.3c of this
@@ -85,7 +84,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc3 -- 12 October 2020}
+% \date{Version 0.3.0-rc4 -- 3 March 2021}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -165,6 +164,24 @@ Please report any bugs or feature requests to
 % }
 % \end{minipage}\bigskip\\
 % \emph{Warning:} The semantic bracket \avm{\[...\]} is only available when the package option |[lfg]| is loaded, i.e. |\usepackage[lfg]{langsci-avm}|. This is because the semantic delimiters are not available in every font, and are currently not provided in standard \LaTeX\ documents. If you load the |[lfg]| option but do not provide the symbol (e.g. by using a font such as \pkg{libertinus}), the package \pkg{unicode-math} will automatically be loaded to provide the symbol. If the |[lfg]| option is not present, \cmd{\[} \marg{structure} \cmd{\]} will result in none delimiter output, but the \marg{structure} will be printed nonetheless.
+% \end{function}
+% 
+% \begin{function}[added=2021-03-03]{\lframe ... \rframe}
+% \begin{syntax}
+%     \cmd{\lframe} \meta{structure} \cmd{\rframe}
+%   \end{syntax}
+% In addition to the delimiters above, these two delimit a \meta{structure} that is placed in a rectangular box, which is used in Fillmore \& Kay's notation. It can be used like the other delimiters.\bigskip\\
+% \noindent\begin{minipage}[c]{.5\linewidth}
+% \begin{verbatim}
+% \avm{
+%   \lframe ... \rframe
+% }
+% \end{verbatim}
+% \end{minipage}\begin{minipage}[c]{.5\linewidth}
+% \avm{
+%   \lframe ... \rframe
+% }
+% \end{minipage}
 % \end{function}
 % 
 % \begin{function}{!...!}
@@ -346,7 +363,7 @@ Please report any bugs or feature requests to
 % Any proper part of an AVM can be referenced in \marg{contents}. It could be just a value, an attribute's name, or part of either, but whole (sub-)structures can be part of \marg{contents} as well.
 % \end{function}
 % 
-% A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:
+% A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:\pagebreak
 % 
 % \begin{center}
 % \avm[pic, picname=example1]{[ subj  & \1\\
@@ -427,7 +444,7 @@ Please report any bugs or feature requests to
 % 
 % Note that any other structure type would have worked instead of \avm{<>}. But \avm{<>} and any other markers for sub-structures are left unchanged by \cs{phon} and other custom commands. This is why the \emph{attribute} font is changed by \cs{phon}, although \emph{lin'gwistiks} is technically a value. Remember that \cmd{<} creates a new list sub-substructure, and the first content is printed in its attribute font.
 % \end{function}
-% 
+% \pagebreak
 % \section{Applications}\label{sec:applications}
 % 
 % \subsection{Spacing and size of delimiters}\label{sec:spacing}
@@ -649,7 +666,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2020-10-12} {0.3.0-rc3}
+  {2020-03-03} {0.3.0-rc4}
   {AVMs and feature structures in LaTeX3}
   
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -783,12 +800,13 @@ Please report any bugs or feature requests to
 %    \end{macrocode}
 %    \end{macro}
   
-%    \begin{variable}{\l__avm_mode_bool, \l__avm_parens_tracker, \l__avm_defined_commands_tl}
-% We need an auxiliary variable to store the current mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced. \cs{l__avm_defined_commands_tl} is a token list that stores any commands provided by the user via \cs{avmdefinecommand}
+%    \begin{variable}{\l__avm_mode_bool, \l__avm_parens_tracker, \l__avm_defined_commands_tl, \l__avm_fillmore_kay_box}
+% We need an auxiliary variable to store the current mode. \cs{l__avm_parens_tracker} is a stack for a future check whether the delimiters given to \cs{avm} are balanced. \cs{l__avm_defined_commands_tl} is a token list that stores any commands provided by the user via \cs{avmdefinecommand}. The box \cs{l__avm_fillmore_kay_box} is used as a temporary storage to realise Fillmore \& Kay's notation.
 %    \begin{macrocode}
 \bool_new:N \l__avm_mode_bool
 \seq_new:N \l__avm_parens_tracker
 \tl_new:N \l__avm_defined_commands_tl
+\box_new:N \l__avm_fillmore_kay_box
 %    \end{macrocode}
 %    \end{variable}
 
@@ -953,6 +971,22 @@ Please report any bugs or feature requests to
   { 
     \__avm_parse_output:nw 
       { \__avm_module_end:\right>\c_math_toggle_token\__avm_extra_skip: } 
+  }
+\cs_new:Nn \__avm_replace_lframe: 
+  { 
+    \__avm_parse_output:nw 
+      {  
+        \hbox_set:Nw \l__avm_fillmore_kay_box \group_begin:
+        \c_math_toggle_token\__avm_module_begin:  
+      } 
+  } 
+\cs_new:Nn \__avm_replace_rframe: 
+  { 
+    \__avm_parse_output:nw 
+      { 
+        \__avm_module_end:\c_math_toggle_token\group_end:\hbox_set_end:
+        \fbox{\box_use:N \l__avm_fillmore_kay_box}\__avm_extra_skip: 
+      } 
   }
 \cs_new:Nn \__avm_replace_plus:
   { 
@@ -1169,6 +1203,8 @@ Please report any bugs or feature requests to
         { \} }{ \__avm_replace_rbrace: }                
         { <  }{ \__avm_replace_langle: } 
         { >  }{ \__avm_replace_rangle: } 
+        { \lframe }{ \__avm_replace_lframe: }
+        { \rframe }{ \__avm_replace_rframe: }
       }
       { \__avm_replace_none:N #1 }
   }
