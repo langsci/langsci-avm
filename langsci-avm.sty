@@ -45,7 +45,7 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-03-03} {0.3.0-rc4}
+  {2020-03-19} {0.3.0-rc5}
   {AVMs and feature structures in LaTeX3}
 
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -89,10 +89,14 @@
 
 \keys_define:nn { avm }
   {
+    align .bool_set:N      = \l__avm_align_bool,
+    align .initial:n       = {true},
     stretch .tl_set:N      = \l__avm_arraystretch_tl,
     stretch .initial:n     = {0.9},
     columnsep .dim_set:N   = \l__avm_tabcolsep_dim,
     columnsep .initial:n   = {.5ex},
+    vectorsep .dim_set:N   = \l__avm_singlesep_dim,
+    vectorsep .initial:n   = {1em},
     delimfactor .int_set:N = \l__avm_delimfactor_int,
     delimfactor .initial:n = {1000},
     delimfall .dim_set:N   = \l__avm_delimshortfall_dim,
@@ -166,6 +170,12 @@
     \normalfont\__avm_font_value:
   }
 
+\cs_new:Nn \__avm_init_single_column:
+  {
+    \normalfont\__avm_font_attribute:
+  }
+
+
 
 \tl_const:Nn \l__avm_italics_tl {it}
 
@@ -175,6 +185,11 @@
   }
 
 \cs_new:Nn \__avm_deinit_second_column:
+  {
+    \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/}
+  }
+
+\cs_new:Nn \__avm_deinit_single_column:
   {
     \tl_if_eq:NNT \f@shape \l__avm_italics_tl {\/}
   }
@@ -193,17 +208,35 @@
 
 \cs_new:Nn \__avm_module_begin:
   {
-    \begin{tabular}{@{}
-                    >{\__avm_init_first_column:}l
-                    <{\__avm_deinit_first_column:}
-                    >{\__avm_init_second_column:}l
-                    <{\__avm_deinit_second_column:}
-                    @{}}
+    \bool_if:NTF \l__avm_align_bool
+      {
+        \begin{tabular}{@{}
+                        >{\__avm_init_first_column:}l
+                        <{\__avm_deinit_first_column:}
+                        >{\__avm_init_second_column:}l
+                        <{\__avm_deinit_second_column:}
+                        @{}}
+      }
+      {
+        \begin{tabular}{@{}
+                       >{\__avm_init_single_column:}l
+                       <{\__avm_deinit_single_column:}
+                       @{}}
+      }
   }
 \cs_new:Nn \__avm_module_end:
   {
     \__avm_kern_unused_columns:
     \end{tabular}
+  }
+
+\cs_new:Nn \__avm_replace_ampersand:
+  {
+    \bool_if:NTF \l__avm_align_bool
+      { \__avm_parse_output:nw { & } }
+      { \__avm_parse_output:nw { \__avm_deinit_first_column:
+                                 \skip_horizontal:N \dim_use:N \l__avm_singlesep_dim
+                                 \__avm_init_second_column: } }
   }
 \cs_new:Nn \__avm_replace_lbrace:
   {
@@ -480,6 +513,7 @@
         { \+ }{ \__avm_replace_plus: }
         { \- }{ \__avm_replace_minus: }
         { \shuffle }{ \__avm_replace_circle: }
+        { &  }{ \__avm_replace_ampersand: }
         { [  }{ \__avm_replace_lbrack: }
         { ]  }{ \__avm_replace_rbrack: }
         { \[ }{ \__avm_replace_llbrack: }
