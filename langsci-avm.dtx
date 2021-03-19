@@ -317,9 +317,13 @@ Please report any bugs or feature requests to
 %   \begin{description}[style=nextline]
 %   \item[|style =| \meta{name} \hfill (initially empty)] In addition to any style that you possibly define yourself, a style |narrow| is pre-defined in the package (see Section~\ref{sec:spacing}).
 % 
+%   \item[|align =| \meta{choice} \hfill (initially |true|)] Controls whether the columns in the AVM and its substructures should be aligned (snapping to the grid) or not. Aligned AVMs are separated by |columnsep|, non-aligned are separated by |vectorsep|.
+% 
 %   \item[|stretch =| \meta{factor} \hfill (initially |0.9|)] Define \cs{arraystretch}, i.e. a factor in the determination of line height.
 %   
 %   \item[|columnsep =| \meta{length} \hfill (initially |0.5ex|)] Define the \cs{tabcolsep}, i.e. horizontal space between columns. The first and second column will have |0\columnsep| to the left and right, respectively. Between the two the distance is |2\columnsep|. Using relative units (like |ex| or |em|) may be a good idea so that |columnsep| scales well with changes in font size.
+% 
+%   \item[|vectorsep =| \meta{length} \hfill (initially |1em|)] Define the horizontal separation between columns in non-aligned matrices (see option |align|).
 %   
 %   \item[|delimfactor =| \meta{factor} \hfill (initially |1000|)] Sets \cs{delimiterfactor}. The calculation for the minimum height of a delimiter is $y \cdot f /1000$, where $y$ is the height of the content and $f$ the value of  \cmd{delimfactor}. The default |1000| ensure that the delimiters' height is at least that of the structure.
 %   
@@ -444,7 +448,7 @@ Please report any bugs or feature requests to
 % 
 % Note that any other structure type would have worked instead of \avm{<>}. But \avm{<>} and any other markers for sub-structures are left unchanged by \cs{phon} and other custom commands. This is why the \emph{attribute} font is changed by \cs{phon}, although \emph{lin'gwistiks} is technically a value. Remember that \cmd{<} creates a new list sub-substructure, and the first content is printed in its attribute font.
 % \end{function}
-% \pagebreak
+% 
 % \section{Applications}\label{sec:applications}
 % 
 % \subsection{Spacing and size of delimiters}\label{sec:spacing}
