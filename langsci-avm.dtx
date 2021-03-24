@@ -374,7 +374,7 @@ Please report any bugs or feature requests to
 % Any proper part of an AVM can be referenced in \marg{contents}. It could be just a value, an attribute's name, or part of either, but whole (sub-)structures can be part of \marg{contents} as well.
 % \end{function}
 % 
-% A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:\pagebreak
+% A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:
 % 
 % \begin{center}
 % \avm[pic, picname=example1]{[ subj  & \1\\
@@ -456,7 +456,7 @@ Please report any bugs or feature requests to
 % Note that any other structure type would have worked instead of \avm{<>}. But \avm{<>} and any other markers for sub-structures are left unchanged by \cs{phon} and other custom commands. This is why the \emph{attribute} font is changed by \cs{phon}, although \emph{lin'gwistiks} is technically a value. Remember that \cmd{<} creates a new list sub-substructure, and the first content is printed in its attribute font.
 % \end{function}
 % 
-% \section{Applications}\label{sec:applications}
+% \newpage\section{Applications}\label{sec:applications}
 % 
 % \subsection{Spacing and size of delimiters}\label{sec:spacing}
 % \pkg{langsci-avm} automatically detects if the end of a sub-structure is followed by a line break. This is useful to find cases in which two sub-structures are printed immediately below each other, and to add extra spacing (the |extraskip| from the options). This automatic detection can be suppressed with \cs{relax}. See below for the effect of that detection:\bigskip\\
@@ -607,7 +607,7 @@ Please report any bugs or feature requests to
 % 			attr2 & val2\\
 % 			attr3 & val3]}} ] ]
 % \end{forest}
-% \end{minipage}
+% \end{minipage}\newpage
 % 
 % It may happen that extensive AVMs protrude into the space reserved for other \pkg{forest} nodes or edges. In this case, the \pkg{forest} setting \cmd{for children = \{anchor=north\}} may be useful: (If you like, try this tree without that setting.)\bigskip\\
 % \noindent\begin{minipage}[c]{.6\textwidth}
