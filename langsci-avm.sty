@@ -45,7 +45,7 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2020-03-19} {0.3.0-rc5}
+  {2021-04-26} {0.3.0-rc6}
   {AVMs and feature structures in LaTeX3}
 
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -364,7 +364,7 @@
     \bool_set_false:N \l__avm_in_first_column
     \normalfont\c_group_begin_token\__avm_font_attribute:#1%
     \c_group_end_token\hspace{2\tabcolsep}%
-    \c_group_begin_token\__avm_font_type: #2\c_group_end_token%
+    \c_group_begin_token\__avm_font_value: #2\c_group_end_token%
     \__avm_deinit_second_column:\span\hspace*{-2\tabcolsep}
     \peek_meaning_ignore_spaces:NTF \\ {} {\\}
   }
