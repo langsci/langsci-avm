@@ -23,7 +23,7 @@ avm package, but shares no code base with that package.
 langsci-avm was developed at Language Science Press to help in the
 production of scientific texts in linguistics.
 
-Copyright (C) 2020 by Felix Kopecky, Language Science Press
+Copyright (C) 2021 by Felix Kopecky, Language Science Press
 
 This work consists of the file langsci-avm.dtx 
           and the derived file langsci-avm.pdf.
@@ -84,7 +84,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc6 -- \today}
+% \date{Version 0.3.0-rc7 -- \today}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -252,29 +252,30 @@ Please report any bugs or feature requests to
 %   \end{minipage}
 % \end{function}
 % 
-% \begin{function}{\punk}
+% \begin{function}[updated=2021-06-08]{\punk}
 % \begin{syntax}
 %   \cs{punk} \marg{attribute}\marg{type}
 % \end{syntax}
 % Some \meta{attributes} think that the layout of the other attributes in their community leaves no space for them to express their individuality. They desire a life outside the confines of the alignment defined by the others, while still remaining a member of the matrix.
 %    
-% Technically, this is a line with no snapping to the column layout, but with spacing between the \meta{attribute} and \meta{type}. After \cs{punk}, a |\\| is recommended, but can be omitted in ``normal'' cases.\bigskip\\   
+% Technically, this is a line with no snapping to the column layout, but with spacing between the \meta{attribute} and \meta{type}. After \cs{punk}, a |\\| is obligatory if not in the last line.\bigskip\\   
 % \noindent\begin{minipage}{.6\linewidth}
 % \begin{verbatim}
 % \avm{[ attr1 & val1\\
-%       \punk{a quite long attr2}{val2} ]}
+%       \punk{a quite long attr2}{val2}\\
 %        attr3 & val3\\
 %        attr4 & val4
-%       ]}
+%      ]}
 % \end{verbatim}
 % \end{minipage}\begin{minipage}{.4\linewidth}
 %    \avm{[
 %    	attr1 & val1\\
-%    	\punk{a quite long attr2}{val2}
+%    	\punk{a quite long attr2}{val2}\\
 %       attr3 & val3\\
 %       attr4 & val4
 %    	]}
-%    \end{minipage}
+%    \end{minipage}\bigskip\\
+% \emph{Hint:} Also have a look at the option |align=false|.
 % \end{function}
 % 
 % \begin{function}[updated=2020-03-16]{\+}
@@ -677,7 +678,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2021-04-26} {0.3.0-rc6}
+  {2021-06-08} {0.3.0-rc7}
   {AVMs and feature structures in LaTeX3}
   
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -1077,7 +1078,6 @@ Please report any bugs or feature requests to
     \c_group_end_token\hspace{2\tabcolsep}%
     \c_group_begin_token\__avm_font_value: #2\c_group_end_token%
     \__avm_deinit_second_column:\span\hspace*{-2\tabcolsep}
-    \peek_meaning_ignore_spaces:NTF \\ {} {\\}                                               
   }
 
 \cs_new:Nn \__avm_initialise_document_commands: 
