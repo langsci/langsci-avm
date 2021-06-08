@@ -262,7 +262,7 @@ Please report any bugs or feature requests to
 % \noindent\begin{minipage}{.6\linewidth}
 % \begin{verbatim}
 % \avm{[ attr1 & val1\\
-%       \punk{a quite long attr2}{val2}\\
+%       \punk{a quite long attr2}{val2}
 %        attr3 & val3\\
 %        attr4 & val4
 %      ]}
@@ -270,7 +270,7 @@ Please report any bugs or feature requests to
 % \end{minipage}\begin{minipage}{.4\linewidth}
 %    \avm{[
 %    	attr1 & val1\\
-%    	\punk{a quite long attr2}{val2}\\
+%    	\punk{a quite long attr2}{val2}
 %       attr3 & val3\\
 %       attr4 & val4
 %    	]}
@@ -1078,6 +1078,7 @@ Please report any bugs or feature requests to
     \c_group_end_token\hspace{2\tabcolsep}%
     \c_group_begin_token\__avm_font_value: #2\c_group_end_token%
     \__avm_deinit_second_column:\span\hspace*{-2\tabcolsep}
+    \peek_charcode_ignore_spaces:NTF \\ {} {\\}
   }
 
 \cs_new:Nn \__avm_initialise_document_commands: 
