@@ -45,7 +45,7 @@
 %% ------------------------------------------------------------------------------
 \RequirePackage{xparse,array}
 \ProvidesExplPackage {langsci-avm}
-  {2021-06-08} {0.3.0-rc7}
+  {2021-12-14} {0.3.0-rc8}
   {AVMs and feature structures in LaTeX3}
 
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -53,6 +53,13 @@
   {
     You~issued~a~command~in~line~\msg_line_number:~that~is~only~available~when~
     the~lfg~package~option~is~enabled.
+  }
+
+\msg_new:nnnn {avm} {idpositionunknown}
+  {  Unkown~value~for~option~`id~position`~near~line~\msg_line_number:.  }
+  {  You~specified~an~unknown~value~for~option~`id~position`.~The~content~of~
+     the~id~could~not~be~output.~Please~see~the~manual~for~a~list~of~valid~
+     settings.
   }
 \bool_new:N \l__avm_lfg_bool
 \bool_new:N \l__avm_tikz_bool
@@ -128,6 +135,8 @@
     picname .initial:n    = {automatic},
     id~align .code:n       = { \newcolumntype{i}{#1} },
     id~align .initial:n    = {l},
+    id~position .tl_set:N  = \l__avm_id_position_tl,
+    id~position .initial:n = {south-west},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
                            \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},
@@ -438,9 +447,22 @@
           \end{tabular}
           \egroup
           \hcoffin_set_end:
-        \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
-        \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
-          \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
+          \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
+          \tl_if_eq:VnTF \l__avm_id_position_tl {south-west}
+            {%
+              \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
+              \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
+            }
+            {%
+              \tl_if_eq:VnTF \l__avm_id_position_tl {south-east}
+              {%
+                \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
+                \l_tmpa_coffin {l}{H}{ \coffin_wd:N \l_tmpb_coffin }{ -\coffin_dp:N \l_tmpb_coffin }
+              }
+              {
+                \msg_error:nn {avm}{idpositionunknown}
+              }
+            }
         \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
       }
     \bool_if:NT \l__avm_tikz_bool

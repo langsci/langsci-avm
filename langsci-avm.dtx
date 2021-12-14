@@ -84,7 +84,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc7 -- \today}
+% \date{Version 0.3.0-rc8 -- \today}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -347,6 +347,7 @@ Please report any bugs or feature requests to
 %   \item[|tags =| \meta{format settings} \hfill (initially |\textbackslash footnotesize|)] The font (size) used in \cs{tag} and the shortcuts \cs{1}...\cs{9}.
 %   \item[|switch =| \meta{token} \hfill (initially |!|)] Define the escape token. Change this if you need to use ``!'' as a text glyph.
 %   \item[|id align =| \meta{token} \hfill (initially |l|)] Change the alignment of the column inserted by \cs{id}. Has to be a column specification. The most probable choices are \cmd{l} and \cmd{r}.
+%   \item[|id position =| \meta{option} \hfill (initially |south-west|)] Change the position of \cs{id}. In the standard setting |south-west|, the \cs{id} is placed in the lower left corner of the enclosed structure. When set to |south-east|, the contents are set to the lower right corner. Currently, only |south-west| and |south-east| are recognised inputs, and an error is raised when an unknown option is input.
 %   \item[|customise = | \meta{settings} \hfill (initially empty)] An interface to input custom commands to be run at the beginning of every \cs{avm}.
 %   \end{description}
 % 
@@ -678,7 +679,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2021-06-08} {0.3.0-rc7}
+  {2021-12-14} {0.3.0-rc8}
   {AVMs and feature structures in LaTeX3}
   
 \msg_new:nnnn {avm} {lfgoptionmissing}
@@ -686,6 +687,13 @@ Please report any bugs or feature requests to
   {
     You~issued~a~command~in~line~\msg_line_number:~that~is~only~available~when~
     the~lfg~package~option~is~enabled.
+  }
+  
+\msg_new:nnnn {avm} {idpositionunknown}
+  {  Unkown~value~for~option~`id~position`~near~line~\msg_line_number:.  }
+  {  You~specified~an~unknown~value~for~option~`id~position`.~The~content~of~
+     the~id~could~not~be~output.~Please~see~the~manual~for~a~list~of~valid~
+     settings.
   }
 %    \end{macrocode}
 % Let's first check for package options.
@@ -784,6 +792,8 @@ Please report any bugs or feature requests to
     picname .initial:n	   = {automatic},
     id~align .code:n       = { \newcolumntype{i}{#1} },
     id~align .initial:n	   = {l},
+    id~position .tl_set:N  = \l__avm_id_position_tl,
+    id~position .initial:n = {south-west},
     style .choice:,
     style / narrow .code:n = {\int_set:Nn \l__avm_delimfactor_int {997}
     	                      \dim_set:Nn \l__avm_delimshortfall_dim {5pt}},  
@@ -1150,9 +1160,22 @@ Please report any bugs or feature requests to
           \end{tabular}
           \egroup
           \hcoffin_set_end:
-        \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
-        \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
-          \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
+          \hcoffin_set:Nw \l_tmpb_coffin ##2 \hcoffin_set_end:
+          \tl_if_eq:VnTF \l__avm_id_position_tl {south-west}
+            {%
+              \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
+              \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
+            }
+            {%
+              \tl_if_eq:VnTF \l__avm_id_position_tl {south-east}
+              {%
+                \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
+                \l_tmpa_coffin {l}{H}{ \coffin_wd:N \l_tmpb_coffin }{ -\coffin_dp:N \l_tmpb_coffin }
+              }
+              {
+                \msg_error:nn {avm}{idpositionunknown}
+              } 
+            }  
         \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
       }
 %    \end{macrocode}
