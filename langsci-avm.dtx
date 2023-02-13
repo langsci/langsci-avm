@@ -84,7 +84,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc8 -- \today}
+% \date{Version 0.3.0-rc9 -- \today}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -679,8 +679,8 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2021-12-14} {0.3.0-rc8}
-  {AVMs and feature structures in LaTeX3}
+  {2023-02-14} {0.3.0-rc9}
+  {AVMs and feature structures}
   
 \msg_new:nnnn {avm} {lfgoptionmissing}
   {  Missing~package~option~lfg~at~line~\msg_line_number:  }
@@ -1097,59 +1097,24 @@ Please report any bugs or feature requests to
     \dim_set_eq:NN \tabcolsep \l__avm_tabcolsep_dim
     \int_set_eq:NN \delimiterfactor \l__avm_delimfactor_int
     \dim_set_eq:NN \delimitershortfall \l__avm_delimshortfall_dim
-    \cs_if_exist:NTF \tag 
-      {  \RenewDocumentCommand{\tag}{m}{ \__avm_controls_tag:n {##1} } }
-      {  \NewDocumentCommand{\tag}{m}{   \__avm_controls_tag:n {##1} } }
-    \cs_if_exist:NTF \0
-      {  \RenewDocumentCommand{\0}{}{    \__avm_controls_tag:n {0} } }
-      {  \NewDocumentCommand{\0}{}{      \__avm_controls_tag:n {0} } }
-    \cs_if_exist:NTF \1   
-      {  \RenewDocumentCommand{\1}{}{    \__avm_controls_tag:n {1} } }
-      {  \NewDocumentCommand{\1}{}{      \__avm_controls_tag:n {1} } }
-    \cs_if_exist:NTF \2
-      {  \RenewDocumentCommand{\2}{}{    \__avm_controls_tag:n {2} } }
-      {  \NewDocumentCommand{\2}{}{      \__avm_controls_tag:n {2} } }
-    \cs_if_exist:NTF \3
-      {  \RenewDocumentCommand{\3}{}{    \__avm_controls_tag:n {3} } }
-      {  \NewDocumentCommand{\3}{}{      \__avm_controls_tag:n {3} } }
-    \cs_if_exist:NTF \4
-      {  \RenewDocumentCommand{\4}{}{    \__avm_controls_tag:n {4} } }
-      {  \NewDocumentCommand{\4}{}{      \__avm_controls_tag:n {4} } }
-    \cs_if_exist:NTF \5
-      {  \RenewDocumentCommand{\5}{}{    \__avm_controls_tag:n {5} } }
-      {  \NewDocumentCommand{\5}{}{      \__avm_controls_tag:n {5} } }
-    \cs_if_exist:NTF \6
-      {  \RenewDocumentCommand{\6}{}{    \__avm_controls_tag:n {6} } }
-      {  \NewDocumentCommand{\6}{}{      \__avm_controls_tag:n {6} } }
-    \cs_if_exist:NTF \7
-      {  \RenewDocumentCommand{\7}{}{    \__avm_controls_tag:n {7} } }
-      {  \NewDocumentCommand{\7}{}{      \__avm_controls_tag:n {7} } }
-    \cs_if_exist:NTF \8
-      {  \RenewDocumentCommand{\8}{}{    \__avm_controls_tag:n {8} } }
-      {  \NewDocumentCommand{\8}{}{      \__avm_controls_tag:n {8} } }
-    \cs_if_exist:NTF \9
-      {  \RenewDocumentCommand{\9}{}{    \__avm_controls_tag:n {9} } }
-      {  \NewDocumentCommand{\9}{}{      \__avm_controls_tag:n {9} } }
-    \cs_if_exist:NTF \type 
-      {  \RenewDocumentCommand{\type}{s m}
-        {  
-          \IfBooleanTF { ##1 } 
-            {  \__avm_controls_type_starred:n {##2}  }
-            {  \__avm_controls_type:n {##2} }
-         } 
+    \DeclareDocumentCommand{\tag}{m}{ \__avm_controls_tag:n {##1} }
+    \DeclareDocumentCommand{\0}{}{ \__avm_controls_tag:n {0} }
+    \DeclareDocumentCommand{\1}{}{ \__avm_controls_tag:n {1} }
+    \DeclareDocumentCommand{\2}{}{ \__avm_controls_tag:n {2} }
+    \DeclareDocumentCommand{\3}{}{ \__avm_controls_tag:n {3} }
+    \DeclareDocumentCommand{\4}{}{ \__avm_controls_tag:n {4} }
+    \DeclareDocumentCommand{\5}{}{ \__avm_controls_tag:n {5} }
+    \DeclareDocumentCommand{\6}{}{ \__avm_controls_tag:n {6} }
+    \DeclareDocumentCommand{\7}{}{ \__avm_controls_tag:n {7} }
+    \DeclareDocumentCommand{\8}{}{ \__avm_controls_tag:n {8} }
+    \DeclareDocumentCommand{\9}{}{ \__avm_controls_tag:n {9} }
+    \DeclareDocumentCommand{\type}{s m}
+      {
+        \IfBooleanTF { ##1 } 
+          { \__avm_controls_type_starred:n {##2} }
+          { \__avm_controls_type:n {##2} }
        }
-       {  \NewDocumentCommand{\type}{s m}
-         {
-           \IfBooleanTF { ##1 }
-             {  \__avm_controls_type_starred:n {##2}  }
-             {  \__avm_controls_type:n {##2}  }
-          } 
-        }
-    \cs_if_exist:NTF \punk 
-      {  \RenewDocumentCommand{\punk}{m m}
-        { \__avm_controls_punk:nn {##1}{##2} } }
-      {  \NewDocumentCommand{\punk}{m m}
-        {  \__avm_controls_punk:nn {##1}{##2} } }
+    \DeclareDocumentCommand{\punk}{m m}{ \__avm_controls_punk:nn {##1}{##2} }
     \DeclareDocumentCommand{\id}{m m}
       {%
         \hcoffin_set:Nw \l_tmpa_coffin
