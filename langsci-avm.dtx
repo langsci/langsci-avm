@@ -84,7 +84,7 @@ Please report any bugs or feature requests to
 % 		Please submit bug reports and feature requests to
 % 		\protect\url{https://github.com/langsci/langsci-avm/issues}.
 % 	}}
-% \date{Version 0.3.0-rc9 -- \today}
+% \date{Version 0.3.0 -- \today}
 % \maketitle
 % \frenchspacing
 % \begin{documentation}
@@ -511,33 +511,33 @@ Please report any bugs or feature requests to
 % Sometimes AMVs are placed beside other content to express disjunctions or other relations. In \pkg{langsci-avm} this is done naturally:\bigskip\\
 % \noindent\begin{minipage}[c]{.5\textwidth}
 % \begin{verbatim}
-% \avm{ [attr1 & val1\\
+% \avm{[attr1 & val1\\
 %        attr2 & val2\\
-%        attr3 & val3] } $\lor$ 
-% \avm{ [attr1' & val1'\\
+%        attr3 & val3]} $\lor$ 
+% \avm{[attr1' & val1'\\
 %        attr2' & val2'\\
-%        attr3' & val3'\\] }
+%        attr3' & val3'\\]}
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\textwidth}
-%  \avm{ [attr1 & val1\\
-%          attr2 & val2\\
-%          attr3 & val3] } $\lor$ 
-%  \avm{ [attr1' & val1'\\
-%         attr2' & val2'\\
-%         attr3' & val3'\\] }
+%  \avm{[attr1 & val1\\
+%        attr2 & val2\\
+%        attr3 & val3]} $\lor$ 
+%  \avm{[attr1' & val1'\\
+%        attr2' & val2'\\
+%        attr3' & val3'\\]}
 % \end{minipage}\bigskip\\
 % \noindent\begin{minipage}[c]{.5\textwidth}
 % \begin{verbatim}
 % \textit{sign} $\to$ 
-% \avm{ [ attribute1 & value1\\
-%         attribute2 & value2\\
-%         attribute3 & value3 ] }
+% \avm{[attribute1 & value1\\
+%       attribute2 & value2\\
+%       attribute3 & value3]}
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\textwidth}
 %   \textit{sign} $\to$ 
-% \avm{ [ attribute1 & value1\\
+% \avm{[ attribute1 & value1\\
 % 	attribute2 & value2\\
-% 	attribute3 & value3 ] }
+% 	attribute3 & value3 ]}
 % \end{minipage}
 % 
 % \pagebreak\subsection{Use as a vector}
@@ -641,27 +641,14 @@ Please report any bugs or feature requests to
 % 
 % \pkg{langsci-avm} is not yet able to draw lines in elements of AVMs. This feature is planned for Version 0.3.
 % 
-% 
-% \subsection{Spanning both columns}
-% You can use the \pkg{multicol} package to span both columns in a (sub-)structure. Please remember that every structure has two columns, so the only sensible usage is 
-% 
-% \begin{verbatim}
-% \multicolumn{2}{l}{...}
-% \end{verbatim}
-% 
-% \noindent but only in the first column of a (sub-)structure. For a special usage case, see \cs{type} and \cs{type*} (which do not depend on \pkg{multicol}).
-% 
 % \section{Caveats and planned features}\label{sec:caveats}
 % \begin{enumerate}
 % \item There are currently no error messages. If you do not receive the intended output, please make sure that your code fits the syntax described in this documentation. If your code is fine but the output is not, please submit a bug report or feature request at \url{https://github.com/langsci/langsci-avm/issues}.
 % \item[] These features are planned for the future:
 % \item A check whether the delimiters are balanced, i.e. whether all (sub-)structures are closed by a \verb+]+, \verb+}+, etc.
-% \item Introduce the ability to draw (curved) lines between structures and elements.
 % \item Improve the appearance of (very) large angle brackets so that they vertically span the complete structure they enclose, maybe using \pkg{scalerel}.
 % \end{enumerate}
 % 
-% \section{Feedback and bug reports}
-% Comments, usage reports, and feature requests are welcome! Please open an issue for any of these at \url{https://github.com/langsci/langsci-avm/issues}, or write to me at \url{mailto:felix.kopecky@langsci-press.org} if you feel the need for a feature not listed here, big or small.
 % \end{documentation}
 % 
 % \begin{implementation}
@@ -680,7 +667,7 @@ Please report any bugs or feature requests to
 %
 %    \begin{macrocode}
 \ProvidesExplPackage {langsci-avm} 
-  {2023-02-14} {0.3.0-rc9}
+  {2023-02-20} {0.3.0}
   {AVMs and feature structures}
   
 \msg_new:nnnn {avm} {lfgoptionmissing}
