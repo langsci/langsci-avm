@@ -72,7 +72,7 @@ Please report any bugs or feature requests to
 \usepackage[linguistics]{forest}
 \usepackage[lfg,tikz]{langsci-avm}
 \usetikzlibrary{arrows, arrows.meta}
-\usepackage{enumitem,url,gb4e}
+\usepackage{enumitem,url,gb4e,xltxtra}
 \setlist[description]{font=\normalfont}
 \begin{document}
   \DocInput{\jobname.dtx}
@@ -89,10 +89,10 @@ Please report any bugs or feature requests to
 % \frenchspacing
 % \begin{documentation}
 % \section{Introduction}
-% \pkg{langsci-avm} is a \LaTeX3 package aimed at typesetting beautiful feature structures, also known as \emph{attribute-value matrices}, for use in linguistics. The package provides a minimal and easy to read syntax. It depends only on the \pkg{array} package and can be placed almost everywhere, in particular in footnotes or graphs and tree structures. The package is meant as an update to, and serves the same purpose as, Christopher Manning's \pkg{avm} package, but shares no code base with that package. When you come from \pkg{avm}, please see Section~\ref{sec:switching} for a quick conversion guide.
+% \pkg{langsci-avm} allows typesetting of feature structures, or \emph{attribute-value matrices} (AVM), for use in linguistics. The package provides a minimal and easy to read syntax. The package serves the same purpose as Christopher Manning's \pkg{avm} package, but shares no code base with that package. There is a conversion guide in Section~\ref{sec:switching}.
 %
 % To start using \pkg{langsci-avm}, place |\usepackage{langsci-avm}| in your preamble.\\\\
-% \emph{This document is structured as follows:} Section~\ref{sec:basiccommands} describes the input syntax for AVMs and their parts. Ways to customise your AVM's layout follow in Section~\ref{sec:options}, and selected usage cases are presented in Section~\ref{sec:applications}. There's also an administrative and \TeX nical appendix at the end of this document, in case you are interested.
+% \emph{This documentation is structured as follows:} Section~\ref{sec:basiccommands} describes the input syntax for AVMs and their parts. Ways to customise your AVM's layout follow in Section~\ref{sec:options}, and selected usage cases are presented in Section~\ref{sec:applications}. There's also an administrative and \TeX nical appendix at the end of this document, in case you are interested.
 % 
 % \subsection{Example}
 % \begin{verbatim}
@@ -120,7 +120,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avm} \oarg{options} \marg{structure}
 %   \end{syntax}
-%   The heart of this package and its root document comand is |\avm|. In the scope of the command, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. Special elements are described in Section~\ref{sec:specialcommands}. For a description of the layout \meta{options}, see Section~\ref{sec:options}.
+%   This root command of the package type sets AVMs in the documen. In the \marg{structure}, delimiter characters are processed to open and close (sub-)structures, as described in Section~\ref{sec:commands}. Special elements (e.g. tags, operators, type descriptors) are described in Section~\ref{sec:specialcommands}. For a description of the layout \meta{options}, see Section~\ref{sec:options}.
 % 
 %   A \meta{structure} is basically the content of a stylised \cmd{tabular}: The columns are separated by \cmd{&} and a new line is entered with \cmd{\\}.
 % \end{function}
@@ -138,39 +138,44 @@ Please report any bugs or feature requests to
 %   \end{syntax}
 %   Within the scope of \cs{avm}, these delimiters create (sub-)structures that are enclosed by the respective delimiter.  Due to the special meaning that curly braces have in \LaTeX, these are the only ones that need to be run with an escape token (|\|). It is currently possible to mix delimiters, e.g. with |<|\meta{structure}|)|, but this may change in future versions.
 %   
-%   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have at least some lines with a \cmd{&} in your \meta{structure}. Currently, display issues may appear in some structures if none are given.\bigskip\\
+%   \pkg{langsci-avm} expects your (sub-)structures to have \emph{at most two columns}, so that for every line in each (sub-)structure, there should be no more than one \cmd{&}. It is recommended to have at least some lines with a \cmd{&} in your \meta{structure}. Currently, display issues may appear in some structures if none are given -- see the |align=false| option to remedy this effect.\bigskip\\
 %   \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
-%   \[ [ < ( \{ ... \} ) > ] \]
+%    [ < ( \{ ... \} ) > ]
 % }
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\linewidth}
 % \avm{
-%   \[ [ < ( \{ ... \} ) > ] \]
+%    [ < ( \{ ... \} ) > ] 
 % }
 % \end{minipage}\bigskip\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
-%   \[ [ \{ ... \} \\
-%   < ( ... ), ( ... ) > ] \]
+%    [ \{ ... \} \\
+%   < ( ... ), ( ... ) > ] 
 % }
 % \end{verbatim}
 % \end{minipage}\begin{minipage}[c]{.5\linewidth}
 % \avm{
-%   \[ [ \{ ... \} \\
-%   < ( ... ), ( ... ) > ] \]
+%    [ \{ ... \} \\
+%   < ( ... ), ( ... ) > ] 
 % }
-% \end{minipage}\bigskip\\
-% \emph{Warning:} The semantic bracket \avm{\[...\]} is only available when the package option |[lfg]| is loaded, i.e. |\usepackage[lfg]{langsci-avm}|. This is because the semantic delimiters are not available in every font, and are currently not provided in standard \LaTeX\ documents. If you load the |[lfg]| option but do not provide the symbol (e.g. by using a font such as \pkg{libertinus}), the package \pkg{unicode-math} will automatically be loaded to provide the symbol. If the |[lfg]| option is not present, \cmd{\[} \marg{structure} \cmd{\]} will result in none delimiter output, but the \marg{structure} will be printed nonetheless.
+% \end{minipage}
+% \end{function}
+% 
+% \begin{function}[added=2020-10-02]{\[ ... \]}
+% \begin{syntax} \cmd{\[} \meta{structure} \cmd{\]} \end{syntax}
+% Add a semantic bracket \avm[attributes=\normalfont]{\[ \meta{structure} \]}.\smallskip\\
+% \emph{Warning:} Semantic brackets are only available when the package option |[lfg]| is loaded (|\usepackage[lfg]{langsci-avm}|). Documents with this option can only be compiled with \XeLaTeX{}. If the |[lfg]| option is not present, \cmd{\[} \marg{structure} \cmd{\]} will result in none delimiter output, but the \marg{structure} will be printed nonetheless. (The semantic delimiters are not available in every font, and are currently not provided in standard \LaTeX\ documents. If you load the |[lfg]| option but do not provide the symbol (e.g. by using a font such as \pkg{libertinus}), the package \pkg{unicode-math} will automatically be loaded to provide the symbol.)
 % \end{function}
 % 
 % \begin{function}[added=2021-03-03]{\lframe ... \rframe}
 % \begin{syntax}
 %     \cmd{\lframe} \meta{structure} \cmd{\rframe}
 %   \end{syntax}
-% In addition to the delimiters above, these two delimit a \meta{structure} that is placed in a rectangular box, which is used in Fillmore \& Kay's notation. It can be used like the other delimiters.\bigskip\\
+% Delimit a \meta{structure} placed in a rectangular box, which is used in Fillmore \& Kay's notation. It can be used like the other delimiters.\bigskip\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
@@ -224,7 +229,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{type}\meta{*} \marg{type}
 %   \end{syntax}
-%   Will output the \meta{type} in the |types| font (roman italics by default). The starred variant \cs{type*} will span the complete (sub-)structure and \emph{can only be placed in the first column} of this structure. After the starred \cs{type*}, a |\\| is recommended, but can usually be omitted.\bigskip\\   
+%   Will output the \meta{type} in the |types| font (serif italics by default). The starred variant \cs{type*} will span the complete (sub-)structure and \emph{can only be placed in the first column} of this structure. After the starred \cs{type*}, a |\\| is recommended, but can usually be omitted.\bigskip\\   
 %   \noindent\begin{minipage}{.6\linewidth}
 % \begin{verbatim}
 % \avm{[ \type*{A type spanning a line}
@@ -238,18 +243,25 @@ Please report any bugs or feature requests to
 %   \end{minipage}
 % \end{function}
 % 
-% \begin{function}[added=2020-10-02,updated=2020-12-11]{\id} 
+% \begin{function}[added=2020-10-02,updated=2021-12-14]{\id} 
 %   \begin{syntax}
 %     \cs{id} \marg{id} \marg{structure}
 %   \end{syntax}
-%   A variant of \cs{substack} from \pkg{amsmath}, this command adds an identifier to the \marg{structure}. The contents of \marg{id} will be set in math mode by default, which is convenient given that they often contain variables with subscript indices.  Multiple IDs should be separated by a new line, |\\|. The alignment of the id column can be changed with the key \cmd{id align}, see Section~\ref{sec:options}.\bigskip\\   
+%   A variant of \cs{substack} from \pkg{amsmath}, this command adds an identifier to the \marg{structure}. The contents of \marg{id} will be set in math mode by default, which is convenient given that they often contain variables with subscript indices.  Multiple IDs should be separated by a new line, |\\|.\\   
 %   \noindent\begin{minipage}{.75\linewidth}
 % \begin{verbatim}
-% \avm{ \id{n_1\\n_2}{[subj\\pred&swim]}}
+% \avm{\id{n_1\\n_2}{[subj\\pred&swim]}}
 % \end{verbatim}
 %   \end{minipage}\begin{minipage}{.25\linewidth}
-% \avm{ \id{n_1\\n_2}{[subj\\pred&swim]}}
-%   \end{minipage}
+% \avm{\id{n_1\\n_2}{[subj\\pred&swim]}}
+%   \end{minipage}\smallskip\\
+% 
+% The position of the \marg{id} column relative to the \marg{structure} and the alignment within the \marg{id} column can be changed:
+% 
+% \begin{description}[style=nextline]
+%   \item[|id align =| \meta{token} \hfill (initially |l|)] Change the alignment of the column inserted by \cs{id}. Has to be a column specification. The most probable choices are \cmd{l} and \cmd{r}.
+%   \item[|id position =| \meta{option} \hfill (initially |south-west|)] Change the position of \cs{id}. In the standard setting |south-west|, the \cs{id} is placed in the lower left corner of the enclosed structure. When set to |south-east|, the contents are set to the lower right corner. Currently, only |south-west| and |south-east| are recognised inputs, and an error is raised when an unknown option is input.
+% \end{description}
 % \end{function}
 % 
 % \begin{function}[updated=2021-06-08]{\punk}
@@ -283,7 +295,7 @@ Please report any bugs or feature requests to
 % \end{function}
 % 
 % \begin{function}[added=2020-03-17]{\-}
-%   In the scope of \cs{avm}, \cs{-} comes out as ``$\ominus$''. To use the ``optional hyphenation'' meaning of \cs{-}, please write |!\-!|.
+%   In the scope of \cs{avm}, \cs{-} comes out as ``$\ominus$''. To use the ``optional hyphenation'' meaning of \cs{-}, please write |!\-!|, where |!| is your current |switch| token.
 % \end{function}
 % 
 % \begin{function}[added=2020-03-17]{\shuffle}
@@ -294,13 +306,13 @@ Please report any bugs or feature requests to
 % 
 % \subsection{Defining styles}
 % 
-% You can customise many aspects of how an AVM is printed, including the fonts or spacing between delimiters and content. You can apply them locally via the \oarg{options} of \cs{avm} or by using \cs{avmsetup}. And you can also define your own styles and use them via the \oarg{style = } option in \cs{avm}. 
+% You can customise many aspects of how an AVM is printed, including the fonts or spacing between delimiters and content. You can apply them locally via the \oarg{options} of \cs{avm} or globally by using \cs{avmsetup}. And you can also define your own styles and use them via the \oarg{style = } option in \cs{avm}. 
 % 
 % \begin{function}{\avmsetup}
 %   \begin{syntax}
 %     \cs{avmsetup} \marg{options}
 %   \end{syntax}
-%   \marg{options} is a comma-separated list of |key = value| settings. See the list below for all user-configurable options. The \marg{options} are the same as in \cs{avm}\oarg{options}. When inserted in \cs{avm}\oarg{options}, they apply locally, and globally if given to \cs{avmsetup}. Local settings always override global ones, and you can have any feasible number of \cs{avmsetup}s in your document.
+%   \marg{options} is a comma-separated list of |key=value| settings. See the list below for all user-configurable options. The \marg{options} are the same as in \cs{avm}\oarg{options}. When inserted in \cs{avm}\oarg{options}, they apply locally, and globally if given to \cs{avmsetup}. Local settings always override global ones, and you can have any feasible number of \cs{avmsetup}s in your document. The scope of \cs{avmsetup} can be restricted through grouping.
 % 
 % \end{function}
 % 
@@ -308,7 +320,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avmdefinestyle} \marg{name} \marg{settings}
 %   \end{syntax}
-% Instead of applying settings globally or per AVM, you can also define styles and assign them to AVMs, as in |\avm[style=|\meta{name}|]{...}|. The \meta{settings} are a comma-separated list of |key = value| settings, and should be a subset of the settings from \cs{avmsetup}. For example, the following |plain| style highlights neither attributes, values, nor types:
+% Instead of applying settings globally or per AVM, you can also define styles and assign them to AVMs, as in |\avm[style=|\meta{name}|]{...}|. The \meta{settings} are a comma-separated list of |key=value| settings, and should be a subset of the settings from \cs{avmsetup}. For example, the following |plain| style highlights neither attributes, values, nor types:
 % 
 % \begin{verbatim}
 % \avmdefinestyle{plain}{attributes=\normalfont,
@@ -320,7 +332,7 @@ Please report any bugs or feature requests to
 % 
 % \bigskip
 % 
-% \noindent Now to the list of settings you can actually apply:
+% \noindent Now to the list of settings:
 % 
 %   \begin{description}[style=nextline]
 %   \item[|style =| \meta{name} \hfill (initially empty)] In addition to any style that you possibly define yourself, a style |narrow| is pre-defined in the package (see Section~\ref{sec:spacing}).
@@ -346,8 +358,6 @@ Please report any bugs or feature requests to
 %   \item[|types =| \meta{font settings} \hfill (initially |\textbackslash itshape|)] The font used in \cs{type} and \cs{type*}.
 %   \item[|tags =| \meta{format settings} \hfill (initially |\textbackslash footnotesize|)] The font (size) used in \cs{tag} and the shortcuts \cs{1}...\cs{9}.
 %   \item[|switch =| \meta{token} \hfill (initially |!|)] Define the escape token. Change this if you need to use ``!'' as a text glyph.
-%   \item[|id align =| \meta{token} \hfill (initially |l|)] Change the alignment of the column inserted by \cs{id}. Has to be a column specification. The most probable choices are \cmd{l} and \cmd{r}.
-%   \item[|id position =| \meta{option} \hfill (initially |south-west|)] Change the position of \cs{id}. In the standard setting |south-west|, the \cs{id} is placed in the lower left corner of the enclosed structure. When set to |south-east|, the contents are set to the lower right corner. Currently, only |south-west| and |south-east| are recognised inputs, and an error is raised when an unknown option is input.
 %   \item[|customise = | \meta{settings} \hfill (initially empty)] An interface to input custom commands to be run at the beginning of every \cs{avm}.
 %   \end{description}
 % 
@@ -369,11 +379,11 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{node} \marg{id} \marg{contents}
 %   \end{syntax}
-%   \marg{id} serves as part of the node's identifier in a \cmd{tikzpicture}. It will be prefixed, and it's complete name will be |avm-n-\marg{id}|, where |n| is the counter of \cs{avm} in your document that have the |[pic]| option enabled and that don't have a |picname| (see below). |n| starts at 1. For example, a \cs{node} named ``pretty-node'' in the fourth |[pic]|-enabled \cmd{avm} in your document will be |avm-4-pretty-node|. Note that \cs{node} will register the complete name globally in your document, and so can't be declared by other \pkg{tikz} nodes.
+%   \marg{id} serves as part of the node's identifier in a \cmd{tikzpicture}. It will be prefixed, and it's complete name will be |avm-n-|\meta{id}, where |n| is the counter of \cs{avm} in your document that have the |[pic]| option enabled and that don't have a |picname| (see below). |n| starts at 1. For example, a \cs{node} named ``pretty-node'' in the fourth |[pic]|-enabled \cmd{avm} in your document will be |avm-4-pretty-node|. Note that \cs{node} will register the complete name globally in your document, and so can't be declared by other \pkg{tikz} nodes.
 % 
-% This behaviour can be adjusted by passing a |[picname = |\meta{avm's name}|]| to \cs{avm}. E.g., \cs{node}s within |\avm[pic, picname = example1]| will have a full name pattern of |example1-|\meta{id}. Named \cs{avm}s do \emph{not} raise the |n| mentioned in the last paragraph.
+% This behaviour can be adjusted by passing a |[picname = |\meta{avm's name}|]| to \cs{avm}. E.g., \cs{node}s within |\avm[pic, picname=example1]| will have a full name pattern of |example1-|\meta{id}. Named \cs{avm}s do \emph{not} raise the |n| mentioned in the last paragraph.
 % 
-% Any proper part of an AVM can be referenced in \marg{contents}. It could be just a value, an attribute's name, or part of either, but whole (sub-)structures can be part of \marg{contents} as well.
+% Any (sub-)structure can be placed into \marg{contents}. It could be just a value, an attribute's name, or parts thereof, but whole (sub-)structures can be part of \marg{contents} as well.
 % \end{function}
 % 
 % A \cmd{tikzpicture} with options |[remember picture, overlay]| enabled can reference \pkg{langsci-avm}'s \cs{node}s. This way, Ti\emph{k}Z' extensive drawing abilities are available for the decoration of AVMs. Here's a very simple example document:
@@ -414,7 +424,7 @@ Please report any bugs or feature requests to
 %   \begin{syntax}
 %     \cs{avmdefinecommand} \marg{name} \oarg{label} \marg{settings}
 %   \end{syntax}
-% Sub-structures often come in patterns. For example, AVMs often have a \textsc{phon} attribute, which is mapped to a list, the entries of which are in italics. \cs{avmdefinecommand} can account  for this and other input patterns. For example,
+% Structures often follow specific patterns. For example, AVMs often have a \textsc{phon} attribute, which is mapped to a list, the entries of which are in italics. \cs{avmdefinecommand} can account  for this and other input patterns. For example,
 % 
 % \begin{verbatim}
 % \avmdefinecommand{custom}{...}
@@ -436,7 +446,7 @@ Please report any bugs or feature requests to
 % 
 % This creates a command \cs{phon} (and the variant \cs{phon*}) within the scope of any \cs{avm}. It will print the label \texttt{phon} in the current font and then apply three settings locally: italics for the attribute (first) column, and two settings for very narrow delimiter fitting. 
 % 
-% This results in: (The font of this documentation has little support for IPA.)\avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\bigskip\\
+% This results in: \avmdefinecommand{phon}[phon] {attributes  = \itshape,delimfactor = 900, delimfall   = 10pt}\bigskip\\
 % \noindent\begin{minipage}[c]{.5\linewidth}
 % \begin{verbatim}
 % \avm{
@@ -638,8 +648,6 @@ Please report any bugs or feature requests to
 % Switching from \pkg{avm} to \pkg{langsci-avm} will require some, though hopefully minimal, changes to the code. In particular, \pkg{langsci-avm} doesn't distinguish between ``active'' and ``passive'' modes, there is now a single way of sorting (see \cs{type}, which replaces \cs{asort} and \cs{osort}), and tags are now produced without |@| (\cs{4} instead of \cmd{@4}, etc.). 
 % 
 % Paths can be printed with a normal \cmd{|}, and $\oplus$ and other relation symbols can be input more easily (see Section~\ref{sec:commands}), though the package will also work with \verb+$|$+ and \verb+$\oplus$+. 
-% 
-% \pkg{langsci-avm} is not yet able to draw lines in elements of AVMs. This feature is planned for Version 0.3.
 % 
 % \section{Caveats and planned features}\label{sec:caveats}
 % \begin{enumerate}
