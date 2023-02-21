@@ -7,17 +7,13 @@
 %% langsci-avm.dtx  (with options: `package')
 %% ------------------------------------------------------------------------------
 %% 
-%% langsci-avm is aimed at typesetting beautiful feature structures,
-%% also known as attribute-value matrices (AVMs), for use in linguistics.
+%% A package for typesetting feature structures, also known as attribute-value
+%% matrices (AVMs), for use in linguistics.
 %% 
-%% The package provides a minimal and easy to read syntax.
-%% It depends only on the array package and can be placed almost everywhere,
-%% in particular in footnotes or graphs and tree structures. The package is meant
-%% as an update to, and serves the same purpose as, Christopher Manning’s
-%% avm package, but shares no code base with that package.
-%% 
-%% langsci-avm was developed at Language Science Press to help in the
-%% production of scientific texts in linguistics.
+%% The package provides a minimal and easy to read syntax. It depends only on the
+%% array package and can be placed almost everywhere, in particular in footnotes or
+%% graphs and tree structures. The package serves the same purpose as, Christopher
+%% Manning’s avm package, but shares no code base with that package.
 %% 
 %% Copyright (C) 2023 by Felix Kopecky, Language Science Press
 %% 
@@ -139,7 +135,8 @@
     extraskip .dim_set:N   = \l__avm_extra_skip_dim,
     extraskip .initial:n   = {\smallskipamount},
     extraskip~in~every~row .bool_set:N = \l__avm_extraskip_bool,
-    customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands: {#1}},
+    customise .code:n      = {\cs_set:Nn \__avm_initialise_custom_commands:
+                                         {#1}},
     customise .initial:n   = { },
     pic .bool_set:N        = \l__avm_picture_bool,
     pic .default:n         = { true },
@@ -293,7 +290,8 @@
           {
             \bool_if:NTF \l__avm_mode_bool
               {
-                \__avm_module_end:\right\rbrack\c_math_toggle_token\__avm_extra_skip:
+                \__avm_module_end:\right\rbrack\c_math_toggle_token%
+                \__avm_extra_skip:
               }
               { ] }
           }
@@ -509,13 +507,14 @@
           \tl_if_eq:VnTF \l__avm_id_position_tl {south-west}
             {%
               \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
-              \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin } %-\coffin_wd:N \l_tmpa_coffin
+              \l_tmpa_coffin {r}{H}{ 0pt }{ -\coffin_dp:N \l_tmpb_coffin }
             }
             {%
               \tl_if_eq:VnTF \l__avm_id_position_tl {south-east}
               {%
                 \coffin_join:NnnNnnnn \l_tmpb_coffin {l}{H}
-                \l_tmpa_coffin {l}{H}{ \coffin_wd:N \l_tmpb_coffin }{ -\coffin_dp:N \l_tmpb_coffin }
+                \l_tmpa_coffin {l}{H}{ \coffin_wd:N \l_tmpb_coffin }
+                                     { -\coffin_dp:N \l_tmpb_coffin }
               }
               {
                 \msg_error:nn {avm}{idpositionunknown}
@@ -536,8 +535,10 @@
           }
         \DeclareDocumentCommand{\node}{m m}
           {
-            \tikz [remember~picture,baseline=(\l__avm_picture_name_prefix_tl-##1.base)]
-            \node [inner~sep=0pt] (\l__avm_picture_name_prefix_tl-##1) {\strut ##2};
+            \tikz [remember~picture,
+                   baseline=(\l__avm_picture_name_prefix_tl-##1.base)]
+            \node [inner~sep=0pt] (\l__avm_picture_name_prefix_tl-##1)
+                                  {\strut ##2};
           }
       }
   }
