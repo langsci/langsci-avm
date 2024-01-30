@@ -365,10 +365,33 @@ Please report any bugs or feature requests to
 %     \cs{begin}\{scope\} \marg{options} \meta{...} \cs{end}\{scope\}
 %   \end{syntax}
 %   \marg{options} is a comma-separated list of |key=value| settings. See the list above for all user-configurable options.
+% \end{function}
 %
 %    The settings will take effect for all structures that \emph{begin} within a \env{scope} environment. That means that the behaviour of the currently active structure can not be changed with
-%    this environment.
-% \end{function}
+%    this environment.\bigskip\\
+% \noindent\begin{minipage}{.5\linewidth}
+% \begin{verbatim}
+% \avm{
+%   [
+%     [Hello & World]\\
+%     \begin{scope}{values=\bfseries}
+%       [Hello & World]
+%     \end{scope}
+%   ]
+% }
+% \end{verbatim}
+% \end{minipage}\begin{minipage}{.5\linewidth}
+% \centering
+% \avm{
+%   [
+%     [Hello & World]\\
+%     \begin{scope}{values=\bfseries}
+%       [Hello & World]
+%     \end{scope}
+%   ]
+% }
+% \end{minipage}
+%
 % 
 % \subsection{Drawing edges between AVM contents}
 % It is possible to make AVM contents available to \pkg{tikz}, so that they can be referenced in a \cmd{tikzpicture}. To enable this feature, \pkg{langsci-avm} has to be loaded with the option |[tikz]|:
@@ -1246,6 +1269,7 @@ Please report any bugs or feature requests to
       {
         \group_begin:
         \keys_set:nn { avm } { ##1 }
+        \ignorespaces
       }
       {
         \group_end:
