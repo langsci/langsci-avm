@@ -522,6 +522,14 @@
             }
         \coffin_typeset:Nnnnn \l_tmpb_coffin {l}{vc}{0pt}{0pt}
       }
+    \DeclareDocumentEnvironment{scope}{ +m }
+      {
+        \group_begin:
+        \keys_set:nn { avm } { ##1 }
+      }
+      {
+        \group_end:
+      }
     \bool_if:NT \l__avm_tikz_bool
       {
         \tl_if_eq:VnTF \l__avm_picture_name_tl {automatic}
